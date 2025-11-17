@@ -10,7 +10,6 @@
 //=======================================================
 #include "GameEngine.h" // ゲームエンジンクラス
 #include "Main.h"       // メイン関数ヘッダファイル(画面高さ、幅の定義)
-#include <mmsystem.h>   // マルチメディアAPI（timeGetTime関数用）
 
 /// <summary>
 /// 初期化処理関数
@@ -33,6 +32,9 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
         return false;   // 初期化失敗
     }
 
+	// 2. フレームタイマーの生成と初期化
+	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
+
     return true;
 }
 
@@ -42,56 +44,31 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 /// <returns></returns>
 int GameEngine::Run()
 {
-    // 時間管理用変数
-    DWORD	dwExecLastTime;
-    DWORD	dwFPSLastTime;
-    DWORD	dwCurrentTime;
-    DWORD	dwFrameCount;
-
-    //タイマーの分解能を設定
-    timeBeginPeriod(1);
-
-    //フレームレート計測初期化
-    dwExecLastTime = dwFPSLastTime = timeGetTime();//現在のタイマー値
-    dwCurrentTime = dwFrameCount = 0;
-
 	// メインループ
     while (true)
     {
 
-		// 1. ウィンドウメッセージ処理
+		// ウィンドウメッセージ処理
         if (!m_window->ProcessMessages())
         {
             break; // WM_QUIT が来たらループ終了
 		}
 
-		// 2. 時間更新
-        dwCurrentTime = timeGetTime();  //現在のタイマー値を取得
-
-        // FPS カウント（1秒経過ごとにリセット）
-        if ((dwCurrentTime - dwFPSLastTime) >= 1000)//1秒経過したか
+		// Update();
+		// LateUpdate();
+		
+		// 固定FPS制御
+        if (m_frameTimer->Tick())
         {
-            dwFPSLastTime = dwCurrentTime;	//現在のタイマー値を保存
-            dwFrameCount = 0;				//フレームカウントをクリア
-        }
+            float deltaTime = m_frameTimer->GetDeltaTime();
 
-        // 固定FPS制御（m_fps を元に更新タイミングを決定）
-        const DWORD frameSpan = static_cast<DWORD>(1000.0f / m_fps);
-        if ((dwCurrentTime - dwExecLastTime) >= frameSpan)
-        {
-            dwExecLastTime = dwCurrentTime;	//現在の時間を保存
-
-            // 3. ゲーム内処理
-			// Update();
-			// Draw();
-
-
-            ++dwFrameCount;	//フレームカウントを進める
+            // ここでゲーム更新＆描画
+            // Update(deltaTime);
+            // LateUpdate(deltaTime);
+            // FixedUpdate();
+            // Draw();
         }
     }
-
-    // タイマー精度を元に戻す
-    timeEndPeriod(1);
 
     return 0;
 }
@@ -100,7 +77,11 @@ int GameEngine::Run()
 // 終了処理
 void GameEngine::Uninit()
 {
-
+    // フレームタイマーの解放
+    if (m_frameTimer)
+    {
+        m_frameTimer.reset();
+    }
 
 	// ウィンドウの終了処理
     if (m_window)   // ウィンドウが存在する場合

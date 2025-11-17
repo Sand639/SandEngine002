@@ -11,6 +11,7 @@
 #include <Windows.h>    // Windows API
 #include <memory>       // スマートポインタを使う
 #include "Window.h"     // ウィンドウクラス
+#include "FrameTimer.h" // フレームタイマークラス
 
 /// <summary>
 /// ゲームエンジン本体
@@ -24,8 +25,9 @@ private:
     // ウィンドウ管理クラス
     std::unique_ptr<Window> m_window;
 
-    // ターゲットFPS（デフォルト60）
-	int m_fps = 60;
+	// フレームタイマー
+	std::unique_ptr<FrameTimer> m_frameTimer;
+	int m_fps = 60; // 目標FPS
 
 public:
 
