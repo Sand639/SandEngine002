@@ -6,6 +6,73 @@
 //=======================================================
 #include "Entity.h"
 
+void Entity::Init()
+{
+	//コンポーネントの初期化
+	for (auto& comp : m_components)
+	{
+		comp->Init();
+	}
+}
+
+void Entity::Uninit()
+{
+	//コンポーネントの終了処理
+	for (auto& comp : m_components)
+	{
+		comp->Uninit();
+	}
+}
+
+void Entity::Update()
+{
+
+	if (!m_isActive) return;
+
+	//コンポーネントの更新処理
+	for (auto& comp : m_components)
+	{
+		comp->Update();
+	}
+}
+
+void Entity::FixedUpdate()
+{
+
+	if (!m_isActive) return;
+
+	//コンポーネントの固定更新処理
+	for (auto& comp : m_components)
+	{
+		comp->FixedUpdate();
+	}
+}
+
+void Entity::LateUpdate()
+{
+
+	if (!m_isActive) return;
+
+	//コンポーネントの後更新処理
+	for (auto& comp : m_components)
+	{
+		comp->LateUpdate();
+	}
+}
+
+void Entity::Draw()
+{
+
+	if (!m_isActive) return;
+
+	//コンポーネントの描画処理
+	for (auto& comp : m_components)
+	{
+		comp->Draw();
+	}
+}
+
+
 /// <summary>
 /// 有効状態の設定
 /// </summary>
