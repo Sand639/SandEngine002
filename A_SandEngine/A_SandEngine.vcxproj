@@ -130,6 +130,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Main.h" />
