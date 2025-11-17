@@ -1,0 +1,117 @@
+//=======================================================
+// ファイル名	: Entity.h
+// 制作者		: 大槻 海斗(Sand)
+// 制作日		: 2025/11/17
+// 詳細			: エンティティのヘッダファイル
+//=======================================================
+#pragma once
+//=======================================================
+// インクルード
+//=======================================================
+#include <string>		// std::string
+#include <memory>		// std::shared_ptr
+#include <vector>		// std::vector
+#include <type_traits>	// std::is_base_of
+
+#include "Component.h"	// コンポーネント基底クラス
+
+/// <summary>
+/// エンティティクラス
+/// </summary>
+/// <remarks>
+/// ゲーム内のエンティティの基底クラス
+/// </remarks>
+class Entity
+{
+protected:
+
+	//このエンティティの名前
+	std::string m_name = "entity";
+
+	//このエンティティのID(識別子)
+	int m_id = 0;
+
+	//このエンティティが有効かどうか
+	bool m_isActive = true;
+
+	//コンポーネント
+	std::vector<std::shared_ptr<Component>> m_components;
+
+public:
+
+	//コンストラクタ
+	Entity() = default;
+	//デストラクタ
+	virtual ~Entity() = default;
+
+	//ライフサイクル関数
+
+	virtual void Init() {}
+	virtual void Uninit() {}
+	virtual void Update() {}
+	virtual void FixedUpdate() {}
+	virtual void LateUpdate() {}
+	virtual void Draw() {}
+
+	//セッター
+
+	void SetName(const std::string& name) { m_name = name; }		//名前の設定
+	void SetID(int id) { m_id = id; }	//IDの設定
+	bool SetActive(bool _isActive);		//有効状態の設定
+
+	//ゲッター
+
+	const std::string& GetName() const { return m_name; }		//名前の取得
+	int GetID() const { return m_id; }	//IDの取得
+	bool GetIsActive() const { return m_isActive; }	//有効状態の取得
+
+	// --- コンポーネント管理 ---
+
+	/// <summary>
+	/// コンポーネントを追加
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="...Args"></typeparam>
+	/// <param name="...args"></param>
+	/// <returns></returns>
+	template <typename T, typename... Args>
+	std::shared_ptr<T> AddComponent(Args&&... args)
+	{
+		// TがComponentの派生クラスであることを確認
+		static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
+
+		// コンポーネントを生成
+		std::shared_ptr<T> newComp = std::make_shared<T>(std::forward<Args>(args)...);
+
+		// 親ポインタを設定
+		newComp->SetOwner(this);
+
+		// リストに追加
+		m_components.push_back(newComp);
+		return newComp; // 追加したコンポーネントを返す
+	}
+
+	/// <summary>
+	/// 特定の型のコンポーネントを取得
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	template <typename T>
+	std::shared_ptr<T> GetComponent() const
+	{
+		for (const auto& comp : m_components)
+		{
+			if (std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(comp))
+			{
+				return casted;  // 見つかった場合は返す
+			}
+		}
+		return nullptr; // 見つからなかった場合は nullptr を返す
+	}
+
+
+protected:
+
+	virtual void OnActivate() {}
+	virtual void OnDeactivate() {}
+};
