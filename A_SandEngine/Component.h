@@ -39,12 +39,12 @@ public:
 
     // ライフサイクル
 
-    virtual void Init() {}
-    virtual void Uninit() {}
-    virtual void Update() {}
-    virtual void FixedUpdate() {}
-    virtual void LateUpdate() {}
-    virtual void Draw() {}
+    virtual void Init()         {}
+    virtual void Uninit()       {}
+    virtual void Update()       {}
+    virtual void FixedUpdate()  {}
+    virtual void LateUpdate()   {}
+    virtual void Draw()         {}
 
     // 親 Entity を設定する
     void SetOwner(Entity* owner) { m_owner = owner; }

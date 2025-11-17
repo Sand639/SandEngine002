@@ -46,12 +46,12 @@ public:
 
 	//ライフサイクル関数
 
-	virtual void Init() {}
-	virtual void Uninit() {}
-	virtual void Update() {}
-	virtual void FixedUpdate() {}
-	virtual void LateUpdate() {}
-	virtual void Draw() {}
+	virtual void Init();
+	virtual void Uninit();
+	virtual void Update();
+	virtual void FixedUpdate();
+	virtual void LateUpdate();
+	virtual void Draw();
 
 	//セッター
 
