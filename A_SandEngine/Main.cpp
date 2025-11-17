@@ -1,56 +1,56 @@
 //=======================================================
-// ƒtƒ@ƒCƒ‹–¼	: Main.cpp
-// §ìŽÒ		: ‘å’Î ŠC“l(Sand)
-// §ì“ú		: 2025/11/17
-// XV“ú		: 2025/11/17
-// Ú×			: ƒƒCƒ“ŠÖ”‚ª‘‚©‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹
+// ãƒ•ã‚¡ã‚¤ãƒ«å	: Main.cpp
+// åˆ¶ä½œè€…		: å¤§æ§» æµ·æ–—(Sand)
+// åˆ¶ä½œæ—¥		: 2025/11/17
+// æ›´æ–°æ—¥		: 2025/11/17
+// è©³ç´°			: ãƒ¡ã‚¤ãƒ³é–¢æ•°ãŒæ›¸ã‹ã‚Œã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«
 //=======================================================
 
 //=======================================================
-// ƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒŠƒ“ƒNÝ’è
+// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒªãƒ³ã‚¯è¨­å®š
 //=======================================================
-#pragma comment(lib, "d3d11.lib")			// DirectX11ƒ‰ƒCƒuƒ‰ƒŠ
-#pragma comment (lib, "d3dcompiler.lib")	// ƒVƒF[ƒ_[ƒRƒ“ƒpƒCƒ‰ƒ‰ƒCƒuƒ‰ƒŠ
-#pragma	comment (lib, "winmm.lib")			// ƒ}ƒ‹ƒ`ƒƒfƒBƒAAPIƒ‰ƒCƒuƒ‰ƒŠ0
-#pragma	comment (lib, "dxguid.lib")			// DirectX GUIDƒ‰ƒCƒuƒ‰ƒŠ
-#pragma	comment (lib, "dinput8.lib")		// DirectInputƒ‰ƒCƒuƒ‰ƒŠ
+#pragma comment(lib, "d3d11.lib")			// DirectX11ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+#pragma comment (lib, "d3dcompiler.lib")	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+#pragma	comment (lib, "winmm.lib")			// ãƒžãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢APIãƒ©ã‚¤ãƒ–ãƒ©ãƒª0
+#pragma	comment (lib, "dxguid.lib")			// DirectX GUIDãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+#pragma	comment (lib, "dinput8.lib")		// DirectInputãƒ©ã‚¤ãƒ–ãƒ©ãƒª
 
 //=======================================================
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //=======================================================
-#include "Main.h"		// ƒƒCƒ“ŠÖ”‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹
-#include <windows.h>	//ƒEƒBƒ“ƒhƒEƒYAPI
-#include <memory>		// ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ðŽg‚¤
-#include "GameEngine.h" // ƒQ[ƒ€ƒGƒ“ƒWƒ“ƒNƒ‰ƒX
+#include "Main.h"		// ãƒ¡ã‚¤ãƒ³é–¢æ•°ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
+#include <windows.h>	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚ºAPI
+	if (!engine->Init(hInstance, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, nCmdShow))
+#include "GameEngine.h" // ã‚²ãƒ¼ãƒ ã‚¨ãƒ³ã‚¸ãƒ³ã‚¯ãƒ©ã‚¹
 
 //=======================================================
-// ƒOƒ[ƒoƒ‹’è”’è‹`
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å®šæ•°å®šç¾©
 //=======================================================
-const wchar_t* WINDOW_TITLE = L"SandEngine-DX11"; // ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹
+const wchar_t* WINDOW_TITLE = L"SandEngine-DX11"; // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«
 
 /// <summary>
-/// ƒƒCƒ“ŠÖ”
+/// ãƒ¡ã‚¤ãƒ³é–¢æ•°
 /// </summary>
-/// <param name="hInstance">ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹iŽ¯•ÊŽqj</param>
-/// <param name="hPrevInstance">ˆÈ‘O‚ÌƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹</param>
-/// <param name="lpCmdLine">ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”iANSI•¶Žš—ñj</param>
-/// <param name="nCmdShow">ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒEƒBƒ“ƒhƒE‚ð‚Ç‚Ì‚æ‚¤‚É•\Ž¦‚·‚é‚©iÅ‘å‰»AÅ¬‰»‚È‚Çj‚ðŽw’è‚·‚éƒtƒ‰ƒO</param>
-/// <returns>ƒvƒƒOƒ‰ƒ€‚ÌI—¹ƒR[ƒh‚ðOS‚É•Ô‚µ‚Ü‚·B’Êí‚Í³íI—¹‚Å 0 ‚ð•Ô‚µ‚Ü‚·B</returns>
+/// <param name="hInstance">ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«ï¼ˆè­˜åˆ¥å­ï¼‰</param>
+/// <param name="hPrevInstance">ä»¥å‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«</param>
+/// <param name="lpCmdLine">ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ï¼ˆANSIæ–‡å­—åˆ—ï¼‰</param>
+/// <param name="nCmdShow">ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ã©ã®ã‚ˆã†ã«è¡¨ç¤ºã™ã‚‹ã‹ï¼ˆæœ€å¤§åŒ–ã€æœ€å°åŒ–ãªã©ï¼‰ã‚’æŒ‡å®šã™ã‚‹ãƒ•ãƒ©ã‚°</param>
+/// <returns>ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®çµ‚äº†ã‚³ãƒ¼ãƒ‰ã‚’OSã«è¿”ã—ã¾ã™ã€‚é€šå¸¸ã¯æ­£å¸¸çµ‚äº†ã§ 0 ã‚’è¿”ã—ã¾ã™ã€‚</returns>
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	//—”‰Šú‰»
+	//ä¹±æ•°åˆæœŸåŒ–
 	srand((UINT)timeGetTime());
 
-	// ƒQ[ƒ€ƒGƒ“ƒWƒ“‚ÌƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ðì¬
+	// ã‚²ãƒ¼ãƒ ã‚¨ãƒ³ã‚¸ãƒ³ã®ã‚¹ãƒžãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã‚’ä½œæˆ
 	std::unique_ptr<GameEngine> engine = std::make_unique<GameEngine>();
 
-	// ƒQ[ƒ€ƒGƒ“ƒWƒ“‚Ì‰Šú‰»
+	// ã‚²ãƒ¼ãƒ ã‚¨ãƒ³ã‚¸ãƒ³ã®åˆæœŸåŒ–
 	if (!engine->Init(hInstance, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT))
 	{
-		// ‰Šú‰»Ž¸”sŽž‚ÍI—¹
+		// åˆæœŸåŒ–å¤±æ•—æ™‚ã¯çµ‚äº†
 		return 1;
 	}
 
-	// ƒƒCƒ“ƒ‹[ƒv‚ÌŽÀs
+	// ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—ã®å®Ÿè¡Œ
 	return engine->Run();
 }

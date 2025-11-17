@@ -1,71 +1,71 @@
 //=======================================================
-// ƒtƒ@ƒCƒ‹–¼	: messageBox.cpp
-// §ìŽÒ		: ‘å’Î ŠC“l(Sand)
-// §ì“ú		: 2025/11/02
-// Ú×			: ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ð•\Ž¦‚·‚éŽž‚ÉŽg‚¤ƒ‰ƒbƒp[ƒNƒ‰ƒX‚ÌŽÀ‘•ƒtƒ@ƒCƒ‹
+#endif
+#endif
+// åˆ¶ä½œæ—¥		: 2025/11/02
+// è©³ç´°			: ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤ºã™ã‚‹æ™‚ã«ä½¿ã†ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…ãƒ•ã‚¡ã‚¤ãƒ«
 //=======================================================
 
 //=======================================================
-// ƒCƒ“ƒNƒ‹[ƒh
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰
 //=======================================================
-#include "MessageBox.h"	// ƒƒbƒZ[ƒWƒ{ƒbƒNƒXƒ‰ƒbƒp[ƒNƒ‰ƒX
-#include <windows.h>	//ƒEƒBƒ“ƒhƒEƒYAPI
+#include "MessageBox.h"	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
+#include <windows.h>	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚ºAPI
 #include <string>       // std::wstring
 
 /// <summary>
-/// ƒGƒ‰[ƒƒbƒZ[ƒW‚ð•\Ž¦‚·‚éŽž‚ÉŽg—p‚·‚éƒ‰ƒbƒp[ŠÖ”
+/// ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹æ™‚ã«ä½¿ç”¨ã™ã‚‹ãƒ©ãƒƒãƒ‘ãƒ¼é–¢æ•°
 /// </summary>
-/// <param name="message">ƒGƒ‰[“à—e</param>
-/// <param name="title">ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚Ìƒ^ƒCƒgƒ‹</param>
+/// <param name="message">ã‚¨ãƒ©ãƒ¼å†…å®¹</param>
+/// <param name="title">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
 void MessageBoxWrapper::errorMessage(const char* message, const char* title)
 {
-	//ƒfƒoƒbƒOƒrƒ‹ƒhŽž‚Ìˆ—
+	//ãƒ‡ãƒãƒƒã‚°ãƒ“ãƒ«ãƒ‰æ™‚ã®å‡¦ç†
 #if defined(_DEBUG)
-	// ƒfƒoƒbƒK‚ÉƒƒbƒZ[ƒW‚ðo—Í
+	// ãƒ‡ãƒãƒƒã‚¬ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºåŠ›
 	OutputDebugStringA(message);
 	OutputDebugStringA("\n");
-	// ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ð•\Ž¦
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
 	MessageBoxA(nullptr, message, title, MB_OK | MB_ICONERROR);
 #endif
 }
 
 /// <summary>
-/// HRESULT‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ð•\Ž¦‚·‚éŽž‚ÉŽg—p‚·‚éƒ‰ƒbƒp[ŠÖ”
+/// HRESULTã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹æ™‚ã«ä½¿ç”¨ã™ã‚‹ãƒ©ãƒƒãƒ‘ãƒ¼é–¢æ•°
 /// </summary>
-/// <param name="hr">HRESULT’l</param>
-/// <param name="title">ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚Ìƒ^ƒCƒgƒ‹</param>
+/// <param name="hr">HRESULTå€¤</param>
+/// <param name="title">ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã®ã‚¿ã‚¤ãƒˆãƒ«</param>
 void MessageBoxWrapper::ShowHRErrorMessage(HRESULT hr, const std::wstring& title) {
 #if defined(_DEBUG)
-	// ƒfƒoƒbƒK‚ÉHRESULTƒR[ƒh‚ðo—Í
-	OutputDebugStringW((L"HRESULT ƒGƒ‰[ƒR[ƒh: 0x" + std::to_wstring(hr) + L"\n").c_str());
+	// ãƒ‡ãƒãƒƒã‚¬ã«HRESULTã‚³ãƒ¼ãƒ‰ã‚’å‡ºåŠ›
+	OutputDebugStringW((L"HRESULT ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰: 0x" + std::to_wstring(hr) + L"\n").c_str());
 
-	// ƒGƒ‰[ƒR[ƒh‚©‚çƒƒbƒZ[ƒWƒeƒLƒXƒg‚ðŽæ“¾
+	// ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‹ã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ†ã‚­ã‚¹ãƒˆã‚’å–å¾—
 	LPWSTR errorText = nullptr;
 
-	// FormatMessageW‚ðŽg—p‚µ‚ÄƒGƒ‰[ƒƒbƒZ[ƒW‚ðŽæ“¾
+	// FormatMessageWã‚’ä½¿ç”¨ã—ã¦ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—
 	FormatMessageW(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,    // ƒtƒ‰ƒO
-		nullptr,    // ƒƒbƒZ[ƒWƒ\[ƒX
-		hr,         // ƒƒbƒZ[ƒWID (HRESULTƒR[ƒh)
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),  // Œ¾ŒêID
-		(LPWSTR)&errorText, // ƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		0,                  // ƒoƒbƒtƒ@ƒTƒCƒY (Ž©“®Š„‚è“–‚Ä‚Ì‚½‚ß0)
-		nullptr             // ˆø”ƒŠƒXƒg
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,    // ãƒ•ãƒ©ã‚°
+		nullptr,    // ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚½ãƒ¼ã‚¹
+		hr,         // ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ID (HRESULTã‚³ãƒ¼ãƒ‰)
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),  // è¨€èªžID
+		(LPWSTR)&errorText, // ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		0,                  // ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º (è‡ªå‹•å‰²ã‚Šå½“ã¦ã®ãŸã‚0)
+		nullptr             // å¼•æ•°ãƒªã‚¹ãƒˆ
 	);
 
-	// ƒƒbƒZ[ƒW‚Ì€”õ
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æº–å‚™
 	std::wstring message;
 
-	// Žæ“¾‚µ‚½ƒƒbƒZ[ƒWƒeƒLƒXƒg‚ª‚ ‚ê‚ÎŽg—pA‚È‚¯‚ê‚Î•s–¾‚ÈƒGƒ‰[ƒR[ƒh‚ð•\Ž¦
+	// å–å¾—ã—ãŸãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ†ã‚­ã‚¹ãƒˆãŒã‚ã‚Œã°ä½¿ç”¨ã€ãªã‘ã‚Œã°ä¸æ˜Žãªã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚’è¡¨ç¤º
 	if (errorText) {
-		message = errorText;	// ƒƒbƒZ[ƒWƒeƒLƒXƒg‚ðÝ’è
-		LocalFree(errorText);	// ƒoƒbƒtƒ@‚ð‰ð•ú
+		message = errorText;	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ†ã‚­ã‚¹ãƒˆã‚’è¨­å®š
+		LocalFree(errorText);	// ãƒãƒƒãƒ•ã‚¡ã‚’è§£æ”¾
 	}
 	else {
-		message = L"•s–¾‚ÈƒGƒ‰[ƒR[ƒh: 0x" + std::to_wstring(hr);
+		message = L"ä¸æ˜Žãªã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰: 0x" + std::to_wstring(hr);
 	}
 
-	// ƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ð•\Ž¦
+	// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
 	MessageBoxW(nullptr, message.c_str(), title.c_str(), MB_ICONERROR | MB_OK);
 #endif
 }

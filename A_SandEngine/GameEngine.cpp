@@ -1,111 +1,122 @@
 //=======================================================
-// ƒtƒ@ƒCƒ‹–¼	: GameEngine.cpp
-// §ìÒ		: ‘å’Î ŠC“l(Sand)
-// §ì“ú		: 2025/11/17
-// Ú×			: ƒQ[ƒ€ƒGƒ“ƒWƒ“ƒNƒ‰ƒX‚ÌÀ‘•ƒtƒ@ƒCƒ‹
-//=======================================================
+#include <algorithm>     // std::max
+bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int height, int nCmdShow)
+    if (!m_window->Init(hInstance, title, width, height, nCmdShow))
+	// vpÏ
+	DWORD dwExecLastTime;
+	DWORD dwFPSLastTime;
+	DWORD dwCurrentTime;
+	DWORD dwFrameCount;
+	// ^C}\Ìİ’
+	timeBeginPeriod(1);
+	// 
+	dwExecLastTime = dwFPSLastTime = timeGetTime();// İ
+	dwCurrentTime = 0;
+	dwFrameCount = 0;
 
-//=======================================================
-// ƒCƒ“ƒNƒ‹[ƒh
-//=======================================================
-#include "GameEngine.h" // ƒQ[ƒ€ƒGƒ“ƒWƒ“ƒNƒ‰ƒX
-#include "Main.h"       // ƒƒCƒ“ŠÖ”ƒwƒbƒ_ƒtƒ@ƒCƒ‹(‰æ–Ê‚‚³A•‚Ì’è‹`)
-#include <mmsystem.h>   // ƒ}ƒ‹ƒ`ƒƒfƒBƒAAPIitimeGetTimeŠÖ”—pj
+	const int targetFPS = std::max(m_fps, 1);
+	const DWORD frameSpan = std::max<DWORD>(1, static_cast<DWORD>(1000.0f / static_cast<float>(targetFPS)));
+	while (true)
+	{
+		if (!m_window->ProcessMessages())
+		{
+			break;	// WM_QUIT MI
+		dwCurrentTime = timeGetTime();
+		if ((dwCurrentTime - dwFPSLastTime) >= 1000)
+		{
+			dwFPSLastTime = dwCurrentTime;
+			dwFrameCount = 0;
+		}
 
-/// <summary>
-/// ‰Šú‰»ˆ—ŠÖ”
-/// </summary>
-/// <param name="hInstance">ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì¯•Êq</param>
-/// <param name="title">ƒEƒBƒ“ƒhƒE‚Ì–¼‘O</param>
-/// <param name="width">ƒEƒBƒ“ƒhƒE‚Ì‰¡‚ÌƒTƒCƒY</param>
-/// <param name="height">ƒEƒBƒ“ƒhƒE‚Ìc‚ÌƒTƒCƒY</param>
-/// <returns>‰Šú‰»‚ª¬Œ÷‚µ‚½‚©‚Ì”»’è</returns>
-bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int height)
-{
+		const DWORD elapsed = dwCurrentTime - dwExecLastTime;
+		if (elapsed < frameSpan)
+		{
+			const DWORD sleepTime = frameSpan - elapsed;
+			if (sleepTime > 0)
+			{
+				::Sleep(sleepTime);
+			}
+			else
+			{
+				::Sleep(0);
+			}
+			continue;
+		}
+		dwExecLastTime = dwCurrentTime;
+		// 3. Q[ÌXVÆ•`
+		// Update();
+		// Draw();
+		++dwFrameCount;
+	}
+	timeEndPeriod(1);
+	return 0;
 
-    // 1. WindowƒNƒ‰ƒX‚Ì¶¬
-    m_window = std::make_unique<Window>();
-
-    // Window‚Ì‰Šú‰»B¸”s‚µ‚½‚çUninit‚ğŒÄ‚Ño‚µAfalse‚ğ•Ô‚·
-    if (!m_window->Init(hInstance, title, width, height))
-    {
-        Uninit();     // I—¹ˆ—
-        return false;   // ‰Šú‰»¸”s
-    }
-
-    return true;
-}
-
-/// <summary>
-/// ƒƒCƒ“ƒ‹[ƒvˆ—ŠÖ”
-/// </summary>
-/// <returns></returns>
 int GameEngine::Run()
 {
-    // ŠÔŠÇ——p•Ï”
+    // æ™‚é–“ç®¡ç†ç”¨å¤‰æ•°
     DWORD	dwExecLastTime;
     DWORD	dwFPSLastTime;
     DWORD	dwCurrentTime;
     DWORD	dwFrameCount;
 
-    //ƒ^ƒCƒ}[‚Ì•ª‰ğ”\‚ğİ’è
+    //ã‚¿ã‚¤ãƒãƒ¼ã®åˆ†è§£èƒ½ã‚’è¨­å®š
     timeBeginPeriod(1);
 
-    //ƒtƒŒ[ƒ€ƒŒ[ƒgŒv‘ª‰Šú‰»
-    dwExecLastTime = dwFPSLastTime = timeGetTime();//Œ»İ‚Ìƒ^ƒCƒ}[’l
+    //ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆè¨ˆæ¸¬åˆæœŸåŒ–
+    dwExecLastTime = dwFPSLastTime = timeGetTime();//ç¾åœ¨ã®ã‚¿ã‚¤ãƒãƒ¼å€¤
     dwCurrentTime = dwFrameCount = 0;
 
-	// ƒƒCƒ“ƒ‹[ƒv
+	// ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—
     while (true)
     {
 
-		// 1. ƒEƒBƒ“ƒhƒEƒƒbƒZ[ƒWˆ—
+		// 1. ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
         if (!m_window->ProcessMessages())
         {
-            break; // WM_QUIT ‚ª—ˆ‚½‚çƒ‹[ƒvI—¹
+            break; // WM_QUIT ãŒæ¥ãŸã‚‰ãƒ«ãƒ¼ãƒ—çµ‚äº†
 		}
 
-		// 2. ŠÔXV
-        dwCurrentTime = timeGetTime();  //Œ»İ‚Ìƒ^ƒCƒ}[’l‚ğæ“¾
+		// 2. æ™‚é–“æ›´æ–°
+        dwCurrentTime = timeGetTime();  //ç¾åœ¨ã®ã‚¿ã‚¤ãƒãƒ¼å€¤ã‚’å–å¾—
 
-        // FPS ƒJƒEƒ“ƒgi1•bŒo‰ß‚²‚Æ‚ÉƒŠƒZƒbƒgj
-        if ((dwCurrentTime - dwFPSLastTime) >= 1000)//1•bŒo‰ß‚µ‚½‚©
+        // FPS ã‚«ã‚¦ãƒ³ãƒˆï¼ˆ1ç§’çµŒéã”ã¨ã«ãƒªã‚»ãƒƒãƒˆï¼‰
+        if ((dwCurrentTime - dwFPSLastTime) >= 1000)//1ç§’çµŒéã—ãŸã‹
         {
-            dwFPSLastTime = dwCurrentTime;	//Œ»İ‚Ìƒ^ƒCƒ}[’l‚ğ•Û‘¶
-            dwFrameCount = 0;				//ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg‚ğƒNƒŠƒA
+            dwFPSLastTime = dwCurrentTime;	//ç¾åœ¨ã®ã‚¿ã‚¤ãƒãƒ¼å€¤ã‚’ä¿å­˜
+            dwFrameCount = 0;				//ãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ãƒˆã‚’ã‚¯ãƒªã‚¢
         }
 
-        // ŒÅ’èFPS§Œäim_fps ‚ğŒ³‚ÉXVƒ^ƒCƒ~ƒ“ƒO‚ğŒˆ’èj
+        // å›ºå®šFPSåˆ¶å¾¡ï¼ˆm_fps ã‚’å…ƒã«æ›´æ–°ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã‚’æ±ºå®šï¼‰
         const DWORD frameSpan = static_cast<DWORD>(1000.0f / m_fps);
         if ((dwCurrentTime - dwExecLastTime) >= frameSpan)
         {
-            dwExecLastTime = dwCurrentTime;	//Œ»İ‚ÌŠÔ‚ğ•Û‘¶
+            dwExecLastTime = dwCurrentTime;	//ç¾åœ¨ã®æ™‚é–“ã‚’ä¿å­˜
 
-            // 3. ƒQ[ƒ€“àˆ—
+            // 3. ã‚²ãƒ¼ãƒ å†…å‡¦ç†
 			// Update();
 			// Draw();
 
 
-            ++dwFrameCount;	//ƒtƒŒ[ƒ€ƒJƒEƒ“ƒg‚ği‚ß‚é
+            ++dwFrameCount;	//ãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ãƒˆã‚’é€²ã‚ã‚‹
         }
     }
 
-    // ƒ^ƒCƒ}[¸“x‚ğŒ³‚É–ß‚·
+    // ã‚¿ã‚¤ãƒãƒ¼ç²¾åº¦ã‚’å…ƒã«æˆ»ã™
     timeEndPeriod(1);
 
     return 0;
 }
 
 
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 void GameEngine::Uninit()
 {
 
 
-	// ƒEƒBƒ“ƒhƒE‚ÌI—¹ˆ—
-    if (m_window)   // ƒEƒBƒ“ƒhƒE‚ª‘¶İ‚·‚éê‡
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®çµ‚äº†å‡¦ç†
+    if (m_window)   // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒå­˜åœ¨ã™ã‚‹å ´åˆ
     {
-        m_window->Uninit();   // ƒEƒBƒ“ƒhƒE‚Ì”jŠü
-        m_window.reset();       // ƒXƒ}[ƒgƒ|ƒCƒ“ƒ^‚ÌQÆ‚ğ‰ğœ‚µAƒƒ‚ƒŠ‚ğ‰ğ•ú
+        m_window->Uninit();   // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ç ´æ£„
+        m_window.reset();       // ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿ã®å‚ç…§ã‚’è§£é™¤ã—ã€ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾
     }
 }
