@@ -13,6 +13,7 @@
 #include "Window.h"     // ウィンドウクラス
 #include "FrameTimer.h" // フレームタイマークラス
 
+
 /// <summary>
 /// ゲームエンジン本体
 /// </summary>
@@ -29,6 +30,20 @@ private:
 	std::unique_ptr<FrameTimer> m_frameTimer;
 	int m_fps = 60; // 目標FPS
 
+    // ライフサイクル
+
+	void Awake();
+	void Start();
+
+	void Update(float deltaTime);
+	void LateUpdate(float deltaTime);
+    void FixedUpdate();
+
+	void Draw();
+    
+    void Uninit();
+
+
 public:
 
     // デストラクタ
@@ -40,7 +55,6 @@ public:
     // メインループ処理関数
     int Run();
 
-    // 終了処理関数
-    void Uninit();
+
 
 };
