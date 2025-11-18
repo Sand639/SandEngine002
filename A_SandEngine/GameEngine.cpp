@@ -2,6 +2,7 @@
 // ファイル名	: GameEngine.cpp
 // 制作者		: 大槻 海斗(Sand)
 // 制作日		: 2025/11/17
+// 更新日		: 2025/11/18
 // 詳細			: ゲームエンジンクラスの実装ファイル
 //=======================================================
 
@@ -10,6 +11,7 @@
 //=======================================================
 #include "GameEngine.h" // ゲームエンジンクラス
 #include "Main.h"       // メイン関数ヘッダファイル(画面高さ、幅の定義)
+#include "Renderer.h"   // レンダラークラス
 
 /// <summary>
 /// 初期化処理関数
@@ -28,11 +30,20 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
     // Windowの初期化。失敗したらUninitを呼び出し、falseを返す
     if (!m_window->Init(hInstance, title, width, height))
     {
-        Uninit();     // 終了処理
+        Uninit();       // 終了処理
         return false;   // 初期化失敗
     }
 
-	// 2. フレームタイマーの生成と初期化
+    // 2. Rendererクラスの生成
+
+	// Rendererの初期化。失敗したらUninitを呼び出し、falseを返す
+    if (!Renderer::Init(m_window->GetHandle(), width, height))
+    {
+        Uninit();       // 終了処理
+        return false;   // 初期化失敗
+    }
+
+	// 3. フレームタイマーの生成と初期化
 	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
 
     return true;
@@ -44,10 +55,13 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 /// <returns></returns>
 int GameEngine::Run()
 {
+    // 一度だけ呼ぶ系
+    Awake();
+    Start();
+
 	// メインループ
     while (true)
     {
-
 		// ウィンドウメッセージ処理
         if (!m_window->ProcessMessages())
         {
@@ -60,19 +74,56 @@ int GameEngine::Run()
 		// 固定FPS制御
         if (m_frameTimer->Tick())
         {
-            float deltaTime = m_frameTimer->GetDeltaTime();
+            float dt = m_frameTimer->GetDeltaTime();
 
             // ここでゲーム更新＆描画
-            // Update(deltaTime);
-            // LateUpdate(deltaTime);
-            // FixedUpdate();
-            // Draw();
+            Update(dt);
+            LateUpdate(dt);
+            FixedUpdate();
+            Draw();
         }
     }
 
     return 0;
 }
 
+// 起動処理
+void GameEngine::Awake()
+{
+
+}
+
+// 開始処理
+void GameEngine::Start()
+{
+
+}
+
+void GameEngine::Update(float deltaTime)
+{
+
+}
+
+void GameEngine::LateUpdate(float deltaTime)
+{
+
+}
+
+void GameEngine::FixedUpdate()
+{
+
+}
+
+void GameEngine::Draw()
+{
+    // 描画開始
+    Renderer::Begin();
+    // ここで描画処理
+
+
+    // 描画終了
+	Renderer::End();
+}
 
 // 終了処理
 void GameEngine::Uninit()
@@ -82,6 +133,9 @@ void GameEngine::Uninit()
     {
         m_frameTimer.reset();
     }
+
+    // Renderer の終了処理
+    Renderer::Uninit();
 
 	// ウィンドウの終了処理
     if (m_window)   // ウィンドウが存在する場合

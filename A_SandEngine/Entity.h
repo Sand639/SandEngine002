@@ -33,6 +33,11 @@ protected:
 
 	//このエンティティが有効かどうか
 	bool m_isActive = true;
+	//このオブジェクトを変更下かどうか
+	bool m_changeActive = false;
+
+	//このエンティティが破棄されるかどうか
+	bool m_isDestroy = false;
 
 	//コンポーネント
 	std::vector<std::shared_ptr<Component>> m_components;
@@ -57,13 +62,16 @@ public:
 
 	void SetName(const std::string& name) { m_name = name; }		//名前の設定
 	void SetID(int id) { m_id = id; }	//IDの設定
-	bool SetActive(bool _isActive);		//有効状態の設定
+	void SetActive(bool _isActive);		//有効状態の設定
+	void SetDestroy(bool _isDestroy) { m_isDestroy = _isDestroy; }	//破棄状態の設定
 
 	//ゲッター
 
-	const std::string& GetName() const { return m_name; }		//名前の取得
-	int GetID() const { return m_id; }	//IDの取得
-	bool GetIsActive() const { return m_isActive; }	//有効状態の取得
+	const std::string& GetName() const { return m_name; }	//名前の取得
+	int GetID() const { return m_id; }						//IDの取得
+	bool GetIsActive() const { return m_isActive; }			//有効状態の取得
+	bool GetChangeActive() const { return m_changeActive; }	//有効状態変更フラグの取得
+	bool GetIsDestroy() const { return m_isDestroy; }		//破棄状態の取得
 
 	// --- コンポーネント管理 ---
 
@@ -112,6 +120,6 @@ public:
 
 protected:
 
-	virtual void OnActivate() {}
-	virtual void OnDeactivate() {}
+	virtual void OnEnable() {}
+	virtual void OnDisable() {}
 };
