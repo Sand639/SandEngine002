@@ -19,24 +19,6 @@
 //=======================================================
 using namespace DirectX;
 
-//=======================================================
-// 静的メンバ変数の実体
-//=======================================================
-ComPtr<ID3D11Device>				Renderer::m_device{};
-ComPtr<ID3D11DeviceContext>			Renderer::m_deviceContext{};
-ComPtr<IDXGISwapChain>				Renderer::m_swapChain{};
-ComPtr<ID3D11RenderTargetView>		Renderer::m_renderTargetView{};
-ComPtr<ID3D11DepthStencilView>		Renderer::m_depthStencilView{};
-
-ComPtr<ID3D11Buffer>				Renderer::m_worldBuffer;
-ComPtr<ID3D11Buffer>				Renderer::m_viewBuffer;
-ComPtr<ID3D11Buffer>				Renderer::m_projectionBuffer;
-
-ComPtr< ID3D11DepthStencilState>	Renderer::m_depthStateEnable{};
-ComPtr< ID3D11DepthStencilState>	Renderer::m_depthStateDisable{};
-
-ComPtr<ID3D11BlendState>			Renderer::m_blendState[BLENDSTATE_MAX] = { nullptr };
-
 /// <summary>
 /// 初期化関数
 /// </summary>
@@ -125,7 +107,7 @@ bool Renderer::Init(HWND hWnd, int width, int height)
 		if (!Debug::CheckHR(hr, L"デプスステンシルバッファの作成に失敗しました")) return false;
 
 		// デプスステンシルビュー作成
-		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};									// デプスステンシルビューの設定構造体
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};										// デプスステンシルビューの設定構造体
 		depthStencilViewDesc.Format = textureDesc.Format;											// フォーマット
 		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;							// 2Dテクスチャとして使用
 		depthStencilViewDesc.Flags = 0;																// その他の設定なし
