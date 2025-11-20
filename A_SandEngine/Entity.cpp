@@ -2,10 +2,18 @@
 // ファイル名	: Entity.cpp
 // 制作者		: 大槻 海斗(Sand)
 // 制作日		: 2025/11/17
+// 更新日		: 2025/11/20
 // 詳細			: エンティティの実装ファイル
+//=======================================================
+
+//=======================================================
+// インクルード
 //=======================================================
 #include "Entity.h"
 
+/// <summary>
+/// 初期化関数
+/// </summary>
 void Entity::Init()
 {
 	//コンポーネントの初期化
@@ -15,6 +23,9 @@ void Entity::Init()
 	}
 }
 
+/// <summary>
+/// 終了処理関数
+/// </summary>
 void Entity::Uninit()
 {
 	//コンポーネントの終了処理
@@ -24,6 +35,9 @@ void Entity::Uninit()
 	}
 }
 
+/// <summary>
+/// 更新関数
+/// </summary>
 void Entity::Update()
 {
 
@@ -36,6 +50,9 @@ void Entity::Update()
 	}
 }
 
+/// <summary>
+/// 固定更新関数
+/// </summary>
 void Entity::FixedUpdate()
 {
 
@@ -48,6 +65,9 @@ void Entity::FixedUpdate()
 	}
 }
 
+/// <summary>
+/// 後更新関数
+/// </summary>
 void Entity::LateUpdate()
 {
 
@@ -60,6 +80,9 @@ void Entity::LateUpdate()
 	}
 }
 
+/// <summary>
+/// 描画関数
+/// </summary>
 void Entity::Draw()
 {
 
@@ -70,6 +93,20 @@ void Entity::Draw()
 	{
 		comp->Draw();
 	}
+}
+
+/// <summary>
+/// 破棄処理関数
+/// </summary>
+/// <returns>破棄されたかどうか</returns>
+bool Entity::OnDestroy()
+{
+	//破棄フラグが立っていたら破棄処理を行う
+	if (m_isDestroy) {
+		Uninit();	//終了処理
+		return true;//破棄対象
+	}
+	return false;	//破棄対象外
 }
 
 

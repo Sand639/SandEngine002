@@ -2,6 +2,7 @@
 // ファイル名	: Entity.h
 // 制作者		: 大槻 海斗(Sand)
 // 制作日		: 2025/11/17
+// 更新日		: 2025/11/20
 // 詳細			: エンティティのヘッダファイル
 //=======================================================
 #pragma once
@@ -57,6 +58,9 @@ public:
 	virtual void FixedUpdate();
 	virtual void LateUpdate();
 	virtual void Draw();
+
+
+	bool OnDestroy();
 
 	//セッター
 
