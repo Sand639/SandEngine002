@@ -12,6 +12,7 @@
 #include <memory>       // スマートポインタを使う
 #include "Window.h"     // ウィンドウクラス
 #include "FrameTimer.h" // フレームタイマークラス
+#include "Renderer.h"
 
 
 /// <summary>
@@ -29,6 +30,9 @@ private:
 	// フレームタイマー
 	std::unique_ptr<FrameTimer> m_frameTimer;
 	int m_fps = 60; // 目標FPS
+
+    // レンダラークラス
+    std::unique_ptr<Renderer> m_renderer;
 
     // ライフサイクル
 
@@ -55,6 +59,13 @@ public:
     // メインループ処理関数
     int Run();
 
+	// シングルトン取得関数
+    static GameEngine& GetInstance()
+    {
+        static GameEngine instance;
+        return instance;
+	}
 
+	Renderer* GetRenderer() const { return m_renderer.get(); }
 
 };

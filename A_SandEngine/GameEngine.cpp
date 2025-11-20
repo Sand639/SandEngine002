@@ -35,9 +35,10 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
     }
 
     // 2. Rendererクラスの生成
+	m_renderer = std::make_unique<Renderer>();
 
 	// Rendererの初期化。失敗したらUninitを呼び出し、falseを返す
-    if (!Renderer::Init(m_window->GetHandle(), width, height))
+    if (!m_renderer->Init(m_window->GetHandle(), width, height))
     {
         Uninit();       // 終了処理
         return false;   // 初期化失敗
@@ -117,12 +118,12 @@ void GameEngine::FixedUpdate()
 void GameEngine::Draw()
 {
     // 描画開始
-    Renderer::Begin();
+    m_renderer->Begin();
     // ここで描画処理
 
 
     // 描画終了
-	Renderer::End();
+    m_renderer->End();
 }
 
 // 終了処理
@@ -134,13 +135,17 @@ void GameEngine::Uninit()
         m_frameTimer.reset();
     }
 
-    // Renderer の終了処理
-    Renderer::Uninit();
+    // レンダラーの終了処理
+    if (m_renderer)
+    {
+        m_renderer->Uninit();   // レンダラーの破棄
+        m_renderer.reset();     // スマートポインタの参照を解除し、メモリを解放
+    }
 
 	// ウィンドウの終了処理
     if (m_window)   // ウィンドウが存在する場合
     {
-        m_window->Uninit();   // ウィンドウの破棄
+        m_window->Uninit();     // ウィンドウの破棄
         m_window.reset();       // スマートポインタの参照を解除し、メモリを解放
     }
 }
