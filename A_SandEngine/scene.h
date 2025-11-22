@@ -38,20 +38,21 @@ public:
     //ライフサイクル関数
 
     virtual void Init();
+
+    virtual void Awake();
+    virtual void Start();
     virtual void Uninit();
     virtual void Update();
     virtual void FixedUpdate();
     virtual void LateUpdate();
     virtual void Draw();
+    virtual void EndOfFrame();
 
 	// Entityの追加関数
 
     // Entityを追加
     template <typename T, typename... Args>
     std::shared_ptr<T> AddEntity(Args&&... args);
-	// Entityを追加し、初期化も行う
-    template <typename T, typename... Args>
-    std::shared_ptr<T> AddEntityInit(Args&&... args);
 
     //Entityの取得関数
     template <typename T>
@@ -85,18 +86,6 @@ inline std::shared_ptr<T> Scene::AddEntity(Args&&... args)
 {
 	std::shared_ptr<T> entity = std::make_shared<T>(std::forward<Args>(args)...);
 
-    m_entities.push_back(entity);
-    return entity;
-}
-
-/// <summary>
-/// シーンにエンティティを追加し、初期化も行う関数
-/// </summary>
-template<typename T, typename... Args>
-inline std::shared_ptr<T> Scene::AddEntityInit(Args&&... args)
-{
-    std::shared_ptr<T> entity = std::make_shared<T>(std::forward<Args>(args)...);
-	entity->Init();
     m_entities.push_back(entity);
     return entity;
 }

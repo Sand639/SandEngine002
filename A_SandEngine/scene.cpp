@@ -21,18 +21,37 @@ Scene::Scene(const std::string& name) : m_name(name)
 
 }
 
+/// <summary>
+/// 初期化関数
+/// </summary>
+void Scene::Init()
+{
+
+}
 
 /// ライフサイクル関数
 
 /// <summary>
 /// 初期化関数
 /// </summary>
-void Scene::Init()
+void Scene::Awake()
 {
 	//エンティティの初期化
 	for (auto& entity : m_entities)
 	{
-		entity->Init();
+		entity->Awake();
+	}
+}
+
+/// <summary>
+/// 開始処理関数
+/// </summary>
+void Scene::Start()
+{
+	//エンティティの初期化
+	for (auto& entity : m_entities)
+	{
+		entity->Start();
 	}
 }
 
@@ -57,16 +76,14 @@ void Scene::Update()
 	//エンティティの更新処理
 	for (auto& entity : m_entities)
 	{
+		// スタート保留中のエンティティのスタート処理
+		if (entity->GetIsStartPending())
+		{
+			entity->Start();	// スタート処理を呼び出す
+		}
+
 		entity->Update();
 	}
-
-	// 破棄フラグの立っている Entity をまとめて消す
-	m_entities.erase(
-		std::remove_if(m_entities.begin(), m_entities.end(),
-			[](const std::shared_ptr<Entity>& e) { return e->OnDestroy(); }),
-		m_entities.end()
-	);
-
 }
 
 /// <summary>
@@ -106,5 +123,28 @@ void Scene::Draw()
 	{
 		entity->Draw();
 	}
+}
+
+/// <summary>
+/// フレーム終了処理関数
+/// </summary>
+void Scene::EndOfFrame()
+{
+	//エンティティのフレーム終了処理
+	for (auto& entity : m_entities)
+	{
+		// フレーム終了処理
+		entity->EndOfFrame();
+
+		// 有効状態の更新
+		entity->UpdateActiveState();
+	}
+
+	// 破棄フラグの立っている Entity をまとめて消す
+	m_entities.erase(
+		std::remove_if(m_entities.begin(), m_entities.end(),
+			[](const std::shared_ptr<Entity>& e) { return e->OnDestroy(); }),
+		m_entities.end()
+	);
 }
 

@@ -14,13 +14,28 @@
 /// <summary>
 /// 初期化関数
 /// </summary>
-void Entity::Init()
+void Entity::Awake()
 {
 	//コンポーネントの初期化
 	for (auto& comp : m_components)
 	{
-		comp->Init();
+		comp->Awake();
 	}
+}
+
+/// <summary>
+/// 開始処理関数
+/// </summary>
+void Entity::Start()
+{
+	//コンポーネントの初期化
+	for (auto& comp : m_components)
+	{
+		comp->Start();
+	}
+
+	//スタート保留フラグを下ろす
+	m_isStartPending = false;
 }
 
 /// <summary>
@@ -96,6 +111,20 @@ void Entity::Draw()
 }
 
 /// <summary>
+/// フレーム終了処理関数
+/// </summary>
+void Entity::EndOfFrame()
+{
+	if (!m_isActive) return;
+
+	//コンポーネントのフレーム終了処理
+	for (auto& comp : m_components)
+	{
+		comp->EndOfFrame();
+	}
+}
+
+/// <summary>
 /// 破棄処理関数
 /// </summary>
 /// <returns>破棄されたかどうか</returns>
@@ -107,6 +136,35 @@ bool Entity::OnDestroy()
 		return true;//破棄対象
 	}
 	return false;	//破棄対象外
+}
+
+/// <summary>
+/// 有効状態更新関数
+/// </summary>
+/// <remarks>
+/// SceneクラスのUpdate関数内と最終処理関数内で呼び出される
+/// </remarks>
+void Entity::UpdateActiveState()
+{
+	// 有効状態の変更があったか確認
+	if (m_changeActive)
+	{
+		// 有効状態が変化した場合の処理
+		if (m_isActive)
+		{
+			// 有効化された場合の処理
+			OnEnable();
+		}
+		else
+		{
+			// 無効化された場合の処理
+			OnDisable();
+		}
+
+		// 変更フラグをリセット
+		m_changeActive = false;		
+
+	}
 }
 
 

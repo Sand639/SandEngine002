@@ -34,11 +34,16 @@ protected:
 
 	//このエンティティが有効かどうか
 	bool m_isActive = true;
-	//このオブジェクトを変更下かどうか
+	//このオブジェクトを変更したかどうか
 	bool m_changeActive = false;
 
 	//このエンティティが破棄されるかどうか
 	bool m_isDestroy = false;
+
+	//スタート処理が保留されているかどうか
+	bool m_isStartPending = true;
+	
+	
 
 	//コンポーネント
 	std::vector<std::shared_ptr<Component>> m_components;
@@ -52,15 +57,18 @@ public:
 
 	//ライフサイクル関数
 
-	virtual void Init();
+	virtual void Awake();
+	virtual void Start();
 	virtual void Uninit();
 	virtual void Update();
 	virtual void FixedUpdate();
 	virtual void LateUpdate();
 	virtual void Draw();
+	virtual void EndOfFrame();
 
 
-	bool OnDestroy();
+	bool OnDestroy();			//破棄処理関数
+	void UpdateActiveState();	//有効状態更新関数
 
 	//セッター
 
@@ -76,6 +84,7 @@ public:
 	bool GetIsActive() const { return m_isActive; }			//有効状態の取得
 	bool GetChangeActive() const { return m_changeActive; }	//有効状態変更フラグの取得
 	bool GetIsDestroy() const { return m_isDestroy; }		//破棄状態の取得
+	bool GetIsStartPending() const { return m_isStartPending; } //スタート保留状態の取得
 
 	// --- コンポーネント管理 ---
 
