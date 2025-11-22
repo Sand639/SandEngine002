@@ -24,30 +24,38 @@
 bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int height)
 {
 
-    // 1. Windowクラスの生成
-    m_window = std::make_unique<Window>();
+	// 1. Windowクラスの生成
+	m_window = std::make_unique<Window>();
 
-    // Windowの初期化。失敗したらUninitを呼び出し、falseを返す
-    if (!m_window->Init(hInstance, title, width, height))
-    {
-        Uninit();       // 終了処理
-        return false;   // 初期化失敗
-    }
+	// Windowの初期化。失敗したらUninitを呼び出し、falseを返す
+	if (!m_window->Init(hInstance, title, width, height))
+	{
+		Uninit();       // 終了処理
+		return false;   // 初期化失敗
+	}
 
-    // 2. Rendererクラスの生成
+	// 2. Rendererクラスの生成
 	m_renderer = std::make_unique<Renderer>();
 
 	// Rendererの初期化。失敗したらUninitを呼び出し、falseを返す
-    if (!m_renderer->Init(m_window->GetHandle(), width, height))
-    {
-        Uninit();       // 終了処理
-        return false;   // 初期化失敗
-    }
+	if (!m_renderer->Init(m_window->GetHandle(), width, height))
+	{
+		Uninit();       // 終了処理
+		return false;   // 初期化失敗
+	}
 
 	// 3. フレームタイマーの生成と初期化
 	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
 
-    return true;
+	// 4. シーンの初期化
+	m_currentScene = nullptr;
+	//TODO: 前回のシーンをロードする処理を追加
+	// LoadScene();
+
+	//TODO: 前回のシーンがなければデフォルトシーンを作成する処理を追加
+	// if (!m_currentScene) CreateDefaultScene();
+
+	return true;
 }
 
 /// <summary>
@@ -56,96 +64,136 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 /// <returns></returns>
 int GameEngine::Run()
 {
-    // 一度だけ呼ぶ系
-    Awake();
-    Start();
+	Awake();
+	Start();
 
 	// メインループ
-    while (true)
-    {
+	while (true)
+	{
 		// ウィンドウメッセージ処理
-        if (!m_window->ProcessMessages())
-        {
-            break; // WM_QUIT が来たらループ終了
+		if (!m_window->ProcessMessages())
+		{
+			break; // WM_QUIT が来たらループ終了
 		}
 
-		// Update();
-		// LateUpdate();
-		
 		// 固定FPS制御
-        if (m_frameTimer->Tick())
-        {
-            float dt = m_frameTimer->GetDeltaTime();
+		if (m_frameTimer->Tick())
+		{
+			// ここでゲーム更新＆描画
+			Update();
+			LateUpdate();
+			FixedUpdate();
+			Draw();
+			EndOfFrame();
 
-            // ここでゲーム更新＆描画
-            Update(dt);
-            LateUpdate(dt);
-            FixedUpdate();
-            Draw();
-        }
-    }
+			// シーンチェンジ処理
+			ChangeScene();
+		}
+	}
 
-    return 0;
+	Uninit(); // 終了処理
+
+	return 0;
 }
 
 // 起動処理
 void GameEngine::Awake()
 {
-
+	if (m_currentScene)
+		m_currentScene->Awake();
 }
 
 // 開始処理
 void GameEngine::Start()
 {
-
+	if (m_currentScene)
+		m_currentScene->Start();
 }
 
-void GameEngine::Update(float deltaTime)
+void GameEngine::Update()
 {
-
+	if (m_currentScene)
+		m_currentScene->Update();
 }
 
-void GameEngine::LateUpdate(float deltaTime)
+void GameEngine::LateUpdate()
 {
-
+	if (m_currentScene)
+		m_currentScene->LateUpdate();
 }
 
 void GameEngine::FixedUpdate()
 {
-
+	if (m_currentScene)
+		m_currentScene->FixedUpdate();
 }
 
 void GameEngine::Draw()
 {
-    // 描画開始
-    m_renderer->Begin();
-    // ここで描画処理
+	// 描画開始
+	m_renderer->Begin();
+	// ここで描画処理
 
+	if (m_currentScene)
+		m_currentScene->Draw();
 
-    // 描画終了
-    m_renderer->End();
+	// 描画終了
+	m_renderer->End();
+}
+
+void GameEngine::EndOfFrame()
+{
+	if (m_currentScene)
+		m_currentScene->EndOfFrame();
 }
 
 // 終了処理
 void GameEngine::Uninit()
 {
-    // フレームタイマーの解放
-    if (m_frameTimer)
-    {
-        m_frameTimer.reset();
-    }
 
-    // レンダラーの終了処理
-    if (m_renderer)
-    {
-        m_renderer->Uninit();   // レンダラーの破棄
-        m_renderer.reset();     // スマートポインタの参照を解除し、メモリを解放
-    }
+	if (m_currentScene)
+	{
+		m_currentScene->Uninit(); // シーンの終了処理
+	}
+
+	// フレームタイマーの解放
+	if (m_frameTimer)
+	{
+		m_frameTimer.reset();
+	}
+
+	// レンダラーの終了処理
+	if (m_renderer)
+	{
+		m_renderer->Uninit();   // レンダラーの破棄
+		m_renderer.reset();     // スマートポインタの参照を解除し、メモリを解放
+	}
 
 	// ウィンドウの終了処理
-    if (m_window)   // ウィンドウが存在する場合
-    {
-        m_window->Uninit();     // ウィンドウの破棄
-        m_window.reset();       // スマートポインタの参照を解除し、メモリを解放
-    }
+	if (m_window)   // ウィンドウが存在する場合
+	{
+		m_window->Uninit();     // ウィンドウの破棄
+		m_window.reset();       // スマートポインタの参照を解除し、メモリを解放
+	}
+}
+
+void GameEngine::ChangeScene()
+{
+	if (m_nextScene)
+	{
+		if (m_currentScene)
+		{
+			m_currentScene->Uninit(); // 現在のシーンが存在する場合、終了処理を行う
+		}
+		m_currentScene = m_nextScene; // 新しいシーンを設定
+		if (m_currentScene)
+		{
+			m_currentScene->Init();		// 新しいシーンが存在する場合、初期化を行う
+			m_currentScene->Awake();	// 新しいシーンのAwakeを呼び出す
+			m_currentScene->Start();	// 新しいシーンのStartを呼び出す
+		}
+
+		m_nextScene.reset(); // 次のシーンをクリア
+	}
+
 }

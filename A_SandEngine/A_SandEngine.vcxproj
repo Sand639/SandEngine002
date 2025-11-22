@@ -137,6 +137,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="MessageBox.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MessageBox.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
