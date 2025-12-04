@@ -10,6 +10,7 @@
 //=======================================================
 #include "Debug.h"		// デバッグクラス
 #include "MessageBox.h" // メッセージボックスラッパークラス
+#include <iostream>     // std::cout
 
 /// <summary>
 /// HRESULTのチェック関数
@@ -25,4 +26,26 @@ bool Debug::CheckHR(HRESULT hr, const std::wstring& title)
 	}
 	return true;	// 成功
 
+}
+
+
+void Debug::LogInternal(LogLevel level, const std::string& message)
+{
+#ifdef _DEBUG
+    const char* levelStr = "";
+    switch (level)
+    {
+    case LogLevel::Info:    levelStr = "[Info] ";    break;
+    case LogLevel::Warning: levelStr = "[Warning] "; break;
+    case LogLevel::Error:   levelStr = "[Error] ";   break;
+    }
+
+    std::string out = std::string(levelStr) + message + "\n";
+
+    // コンソールに出力
+    std::cout << out;
+
+    // Visual Studio の Output ウィンドウにも出す（デバッグ時に便利）
+    OutputDebugStringA(out.c_str());
+#endif
 }

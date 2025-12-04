@@ -57,7 +57,6 @@ bool Mesh::Init(ID3D11Device* device, const std::vector<Vertex>& vertices, const
     // エラーチェック
     if (!Debug::CheckHR(hr, L"インデックスバッファの作成に失敗しました")) return false;
 
-
     return true;
 }
 

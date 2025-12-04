@@ -41,16 +41,16 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In
 	//乱数初期化
 	srand((UINT)timeGetTime());
 
-	// ゲームエンジンのスマートポインタを作成
-	std::unique_ptr<GameEngine> engine = std::make_unique<GameEngine>();
+	// ゲームエンジンのシングルトンインスタンスを取得
+	auto& engine = GameEngine::GetInstance();
 
 	// ゲームエンジンの初期化
-	if (!engine->Init(hInstance, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT))
+	if (!engine.Init(hInstance, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT))
 	{
 		// 初期化失敗時は終了
 		return 1;
 	}
 
 	// メインループの実行
-	return engine->Run();
+	return engine.Run();
 }

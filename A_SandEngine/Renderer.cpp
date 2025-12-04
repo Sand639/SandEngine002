@@ -9,10 +9,11 @@
 //=======================================================
 // インクルード
 //=======================================================
-#include "Renderer.h"      // レンダラークラス
-#include "MessageBox.h"    // メッセージボックスラッパークラス
-#include "Debug.h"         // デバッグクラス
-#include <d3dcompiler.h>   // シェーダーコンパイラ
+#include "Renderer.h"		// レンダラークラス
+#include "MessageBox.h"		// メッセージボックスラッパークラス
+#include "Debug.h"			// デバッグクラス
+#include <d3dcompiler.h>	// シェーダーコンパイラ
+#include <io.h>				// ファイル操作	
 
 //=======================================================
 // 名前空間
@@ -354,6 +355,120 @@ void Renderer::End()
 {
 	m_swapChain->Present(0, 0);
 }
+
+
+/// <summary>
+/// 頂点シェーダーの作成関数
+/// </summary>
+/// <param name="VertexShader">作成する頂点シェーダーのポインタのポインタ</param>
+/// <param name="VertexLayout">作成する頂点レイアウトのポインタのポインタ</param>
+/// <param name="FileName">シェーダーファイル名</param>
+/// <returns>作成が成功したかの判定</returns>
+bool Renderer::CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName)
+{
+	// 戻り値用変数
+	HRESULT hr = S_OK;
+
+	// ファイル読み込み用変数
+	FILE* file;		// ファイルポインタ
+	long int fsize;	// ファイルサイズ
+
+	// シェーダーファイルの読み込み
+	errno_t err = fopen_s(&file, FileName, "rb");	// ファイルオープン
+
+	// エラーチェック
+	if (err != 0 || !file)
+	{
+		MessageBoxWrapper::errorMessage("シェーダーファイルを開けませんでした");
+		return false;
+	}
+
+	// ファイルサイズの取得とバッファの確保
+	fsize = _filelength(_fileno(file));	// ファイルサイズ取得
+	unsigned char* buffer = new unsigned char[fsize];	// ファイルサイズ分のバッファ確保
+	fread(buffer, fsize, 1, file);	// ファイル読み込み
+	fclose(file);	// ファイルクローズ
+
+	// 頂点シェーダーの作成
+	hr = m_device->CreateVertexShader(buffer, fsize, NULL, VertexShader);
+
+	// エラーチェック
+	if (!Debug::CheckHR(hr, L"頂点シェーダーの作成に失敗しました")) return false;
+
+
+	// 頂点レイアウトの作成
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		// position (float3)  : 0
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,              D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		// color (float4)     : 3 * 4 = 12 バイト
+		{ "COLOR",   0, DXGI_FORMAT_R32G32B32A32_FLOAT,  0, 4 * 3,          D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		// uv (float2)        : (3+4) * 4 = 28 バイト
+		{ "TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT,        0, 4 * 7,          D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		// normal (float3)    : (3+4+2) * 4 = 36 バイト
+		{ "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT,     0, 4 * 9,          D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	// レイアウト要素数の取得
+	UINT numElements = ARRAYSIZE(layout);
+
+	// 頂点レイアウトの作成
+	m_device->CreateInputLayout(layout,
+		numElements,
+		buffer,
+		fsize,
+		VertexLayout);
+
+	// バッファ解放
+	delete[] buffer;
+
+	return true;	// 作成成功
+}
+
+
+/// <summary>
+/// ピクセルシェーダーの作成関数
+/// </summary>
+/// <param name="PixelShader">作成するピクセルシェーダーのポインタのポインタ</param>
+/// <param name="FileName">シェーダーファイル名</param>
+/// <returns>作成が成功したかの判定</returns>
+bool Renderer::CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName)
+{
+	// 戻り値用変数
+	HRESULT hr = S_OK;
+
+	//  ファイル読み込み用変数
+	FILE* file = nullptr;		// ファイルポインタ
+	long int fsize;				// ファイルサイズ
+
+	// シェーダーファイルの読み込み
+	errno_t err = fopen_s(&file, FileName, "rb");	// ファイルオープン
+	
+	// エラーチェック
+	if (err != 0 || !file)
+	{
+		MessageBoxWrapper::errorMessage("シェーダーファイルを開けませんでした");
+		return false;
+	}
+
+	// ファイルサイズの取得とバッファの確保
+	fsize = _filelength(_fileno(file));	// ファイルサイズ取得
+	unsigned char* buffer = new unsigned char[fsize];	// ファイルサイズ分のバッファ確保
+	fread(buffer, fsize, 1, file);	// ファイル読み込み
+	fclose(file);	// ファイルクローズ
+
+	// ピクセルシェーダーの作成
+	hr = m_device->CreatePixelShader(buffer, fsize, NULL, PixelShader);
+
+	// エラーチェック
+	if (!Debug::CheckHR(hr, L"ピクセルシェーダーの作成に失敗しました")) return false;
+
+	// バッファ解放
+	delete[] buffer;
+
+	return true;	// 作成成功
+}
+
 
 //ブレンド変更関数
 void Renderer::SetBlendState(BLENDSTATE _blend)
