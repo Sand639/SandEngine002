@@ -122,8 +122,8 @@ bool Renderer::Init(HWND hWnd, int width, int height)
 	}
 
 	// 4. レンダーターゲットとデプスステンシルビューをOMに設定
-	m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
-
+	// Renderer::Beginに移行して毎フレーム呼びだすように変更
+	//m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
 	// 5. ビューポートの設定
 	{
@@ -340,10 +340,26 @@ void Renderer::Uninit()
 /// </summary>
 void Renderer::Begin()
 {
-	// 画面をクリア (ここでは青でクリア)
-	const float clearColor[4] = { 0.0f, 0.4f, 0.75f, 1.0f };
+	// 毎フレーム最初にレンダーターゲットをバインドする
+	ID3D11RenderTargetView* rt = m_renderTargetView.Get();
+	m_deviceContext->OMSetRenderTargets(1, &rt, m_depthStencilView.Get());
+
+	// 画面クリア
+	const float clearColor[4] = { 0.0f, 0.5f, 1.0f, 1.0f };
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), clearColor);
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	// デプスステンシルビューのクリア
+	m_deviceContext->ClearDepthStencilView(
+		m_depthStencilView.Get(),
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
+		0
+	);
+
+
+
+
+
 }
 
 
@@ -413,7 +429,7 @@ bool Renderer::CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11Input
 	UINT numElements = ARRAYSIZE(layout);
 
 	// 頂点レイアウトの作成
-	m_device->CreateInputLayout(layout,
+	hr = m_device->CreateInputLayout(layout,
 		numElements,
 		buffer,
 		fsize,
@@ -421,6 +437,8 @@ bool Renderer::CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11Input
 
 	// バッファ解放
 	delete[] buffer;
+
+	if(!Debug::CheckHR(hr, L"入力レイアウトの作成に失敗しました")) return false;
 
 	return true;	// 作成成功
 }

@@ -36,10 +36,10 @@ cbuffer ProjectionBuffer : register(b2)
 // 頂点シェーダー入力構造体
 struct VS_IN
 {
-    float4 position : POSITION0;
+    float3 position : POSITION0;
     float4 color : COLOR0;
     float2 texCoord : TEXCOORD0;
-    float4 normal : NORMAL0;
+    float3 normal : NORMAL0;
 };
 
 // 頂点シェーダー出力構造体

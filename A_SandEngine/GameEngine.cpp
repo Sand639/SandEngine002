@@ -14,6 +14,8 @@
 #include "Renderer.h"   // レンダラークラス
 #include "TestScene.h"  // テストシーンクラス
 #include "DebugConsole.h" // デバッグコンソールクラス
+#include "Material.h"  // マテリアルクラス
+#include "Mesh.h"
 
 /// <summary>
 /// 初期化処理関数
@@ -142,9 +144,6 @@ void GameEngine::Draw()
 	// 描画開始
 	m_renderer->Begin();
 	// ここで描画処理
-
-	// 3D 用の行列をセット
-	m_renderer->SetWorldViewProjection3D();
 
 	if (m_currentScene)
 		m_currentScene->Draw();

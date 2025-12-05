@@ -15,8 +15,17 @@
 void VSMain(in VS_IN In, out VS_OUT Out)
 {
 
-    Out.position = float4(In.position.xyz, 1.0f); // そのままクリップ空間へ
+// 座標変換なしでそのまま出力
+    Out.position = float4(In.position.xy, 0.5f, 1.0f);
     Out.color = In.color;
+    
+
+    Out.worldPosition = Out.position;
+
+    Out.normal = float4(In.normal, 0.0f);
+
+    Out.texCoord = In.texCoord;
+    Out.depth = Out.position.z;
     
     //matrix wvp;
     //wvp = mul(World, View);
@@ -27,4 +36,3 @@ void VSMain(in VS_IN In, out VS_OUT Out)
     //Out.color = In.color * Material.Diffuse;
     ////Out.Depth = Out.Position.z; //深度値を計算して出力
 }
-

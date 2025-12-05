@@ -59,4 +59,6 @@ void Material::Apply(ID3D11DeviceContext* context)
 	context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 	//入力レイアウトをセット
 	context->IASetInputLayout(m_inputLayout.Get());
+
+	//Debug::Log("Material Apply");
 }

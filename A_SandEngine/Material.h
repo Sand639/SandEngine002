@@ -72,7 +72,7 @@ public:
     // VS / PS / InputLayout を事前に作って渡す方式
     void SetVertexShader(ID3D11VertexShader* vs) { m_vertexShader = vs; }
     void SetPixelShader(ID3D11PixelShader* ps) { m_pixelShader = ps; }
-    //void SetInputLayout(ID3D11InputLayout* layout) { m_inputLayout = layout; }
+    void SetInputLayout(ID3D11InputLayout* layout) { m_inputLayout = layout; }
 
     //シェーダーを変更
     void ChangeShader(SHADERMODE _shaderMode);

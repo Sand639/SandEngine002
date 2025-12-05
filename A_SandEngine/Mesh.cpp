@@ -68,6 +68,8 @@ bool Mesh::Init(ID3D11Device* device, const std::vector<Vertex>& vertices, const
 /// returns>なし</returns>
 void Mesh::Draw(ID3D11DeviceContext* context)
 {
+    //Debug::Log("Mesh Draw");
+
     UINT offset = 0;
 
 	// パイプラインに頂点バッファ、インデックスバッファを設定
