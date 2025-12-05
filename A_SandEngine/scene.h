@@ -48,27 +48,27 @@ public:
     virtual void Draw();
     virtual void EndOfFrame();
 
-	// Entityの追加関数
 
-    // Entityを追加
-    template <typename T, typename... Args>
-    std::shared_ptr<T> AddEntity(Args&&... args);
+    // セッター
 
-    //Entityの取得関数
-    template <typename T>
-	std::vector<std::shared_ptr<T>> GetEntity();
-
-
-	// セッター
-
-	// シーンの名前を設定
+    // シーンの名前を設定
     void SetName(const std::string& name) { m_name = name; }
 
 
-	// ゲッター
+    // ゲッター
 
-	// シーンの名前を取得
+    // シーンの名前を取得
     const std::string& GetName() const { return m_name; }
+
+    // --- Entity管理 ---
+
+    // Entity追加関数
+    template <typename T, typename... Args>
+    std::shared_ptr<T> AddEntity(Args&&... args);
+
+    //特定の型のEntityを取得する関数
+    template <typename T>
+	std::vector<std::shared_ptr<T>> GetEntity();
 
 	// シーン内の全エンティティを取得
     const std::vector<std::shared_ptr<Entity>>& GetEntities() const {

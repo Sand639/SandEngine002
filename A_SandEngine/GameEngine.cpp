@@ -12,6 +12,10 @@
 #include "GameEngine.h" // ゲームエンジンクラス
 #include "Main.h"       // メイン関数ヘッダファイル(画面高さ、幅の定義)
 #include "Renderer.h"   // レンダラークラス
+#include "TestScene.h"  // テストシーンクラス
+#include "DebugConsole.h" // デバッグコンソールクラス
+#include "Material.h"  // マテリアルクラス
+#include "Mesh.h"
 
 /// <summary>
 /// 初期化処理関数
@@ -49,11 +53,16 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 
 	// 4. シーンの初期化
 	m_currentScene = nullptr;
+
 	//TODO: 前回のシーンをロードする処理を追加
 	// LoadScene();
 
 	//TODO: 前回のシーンがなければデフォルトシーンを作成する処理を追加
 	// if (!m_currentScene) CreateDefaultScene();
+
+	//今はとりあえずTestSceneをセットしておく
+	m_currentScene = std::make_unique<TestScene>();
+	m_currentScene->Init();
 
 	return true;
 }
@@ -99,6 +108,8 @@ int GameEngine::Run()
 // 起動処理
 void GameEngine::Awake()
 {
+	DebugConsole::Open(); // デバッグコンソールを開く
+
 	if (m_currentScene)
 		m_currentScene->Awake();
 }
@@ -168,6 +179,8 @@ void GameEngine::Uninit()
 		m_renderer->Uninit();   // レンダラーの破棄
 		m_renderer.reset();     // スマートポインタの参照を解除し、メモリを解放
 	}
+
+	DebugConsole::Close(); // デバッグコンソールを閉じる
 
 	// ウィンドウの終了処理
 	if (m_window)   // ウィンドウが存在する場合

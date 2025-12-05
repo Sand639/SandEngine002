@@ -10,6 +10,26 @@
 //=======================================================
 #include <Windows.h>	// Windows API
 #include <string>       // std::wstring
+#include <cstdarg>
+#include <vector>
+#include <format> // std::vformat, std::make_format_args 用
+
+
+//=======================================================
+// マクロ定義
+//=======================================================
+#define DEBUG_LOG(fmt, ...)        DebugLogFormat(LogLevel::Info,    fmt, ##__VA_ARGS__)
+#define DEBUG_LOG_WARN(fmt, ...)   DebugLogFormat(LogLevel::Warning, fmt, ##__VA_ARGS__)
+#define DEBUG_LOG_ERROR(fmt, ...)  DebugLogFormat(LogLevel::Error,   fmt, ##__VA_ARGS__)
+
+
+// ログレベル列挙型
+enum class LogLevel
+{
+	Info,
+	Warning,
+	Error,
+};
 
 /// <summary>
 /// デバッグ関連の関数をまとめたクラス
@@ -19,9 +39,45 @@
 /// </remarks>
 class Debug
 {
-public:
+public:	//　--- メッセージボックス系の関数 ---
 
 	// HRESULTのチェック関数
 	static bool CheckHR(HRESULT hr, const std::wstring& title = L"HRESULT エラー");
+
+public: // --- コンソールログ系の関数 ---
+	
+	// 情報ログ関数
+    template<typename... Args>
+    static void Log(const std::string& fmt, Args&&... args)
+    {
+#ifdef _DEBUG
+        std::string msg = std::vformat(fmt, std::make_format_args(args...));
+        LogInternal(LogLevel::Info, msg);
+#endif
+    }
+
+
+	// 警告ログ関数
+    template<typename... Args>
+    static void LogWarning(const std::string& fmt, Args&&... args)
+    {
+#ifdef _DEBUG
+        std::string msg = std::vformat(fmt, std::make_format_args(args...));
+        LogInternal(LogLevel::Warning, msg);
+#endif
+    }
+
+	// エラーログ関数
+    template<typename... Args>
+    static void LogError(const std::string& fmt, Args&&... args)
+    {
+#ifdef _DEBUG
+        std::string msg = std::vformat(fmt, std::make_format_args(args...));
+        LogInternal(LogLevel::Error, msg);
+#endif
+    }
+
+private:
+	static void LogInternal(LogLevel level, const std::string& message);
 
 };

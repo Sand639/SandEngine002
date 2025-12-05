@@ -17,9 +17,9 @@
 struct Vertex
 {
 	DirectX::XMFLOAT3 position; //位置
-	DirectX::XMFLOAT3 normal;   //法線
-	DirectX::XMFLOAT2 uv;       //UV座標
 	DirectX::XMFLOAT4 color;    //頂点カラー
+	DirectX::XMFLOAT2 uv;       //UV座標
+	DirectX::XMFLOAT3 normal;   //法線
 };
 
 
@@ -32,11 +32,16 @@ struct Vertex
 class Mesh
 {
 private:
+	//GPUリソース
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;	//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;		//インデックスバッファ
 	UINT m_vertexCount = 0;	//頂点数
 	UINT m_indexCount = 0;	//インデックス数
 	UINT m_stride = 0;		//頂点のストライド
+
+	// CPUリソース
+	std::vector<Vertex>   m_cpuVertices;
+	std::vector<uint32_t> m_cpuIndices;
 
 public:
 
@@ -53,6 +58,12 @@ public:
 	// 描画関数
     void Draw(ID3D11DeviceContext* context);
 
+	std::vector<Vertex>& GetCPUVertices() { return m_cpuVertices; }
+	std::vector<uint32_t>& GetCPUIndices() { return m_cpuIndices; }
 
+	void ClearCPUResources() {
+		m_cpuVertices.clear();
+		m_cpuIndices.clear();
+	}
 
 };

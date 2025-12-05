@@ -88,51 +88,58 @@ public:
 
 	// --- コンポーネント管理 ---
 
-	/// <summary>
-	/// コンポーネントを追加
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <typeparam name="...Args"></typeparam>
-	/// <param name="...args"></param>
-	/// <returns></returns>
+	//コンポーネント追加関数
 	template <typename T, typename... Args>
-	std::shared_ptr<T> AddComponent(Args&&... args)
-	{
-		// TがComponentの派生クラスであることを確認
-		static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
+	std::shared_ptr<T> AddComponent(Args&&... args);
 
-		// コンポーネントを生成
-		std::shared_ptr<T> newComp = std::make_shared<T>(std::forward<Args>(args)...);
-
-		// 親ポインタを設定
-		newComp->SetOwner(this);
-
-		// リストに追加
-		m_components.push_back(newComp);
-		return newComp; // 追加したコンポーネントを返す
-	}
-
-	/// <summary>
-	/// 特定の型のコンポーネントを取得
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
+	// 特定の型のコンポーネントを取得する関数
 	template <typename T>
-	std::shared_ptr<T> GetComponent() const
-	{
-		for (const auto& comp : m_components)
-		{
-			if (std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(comp))
-			{
-				return casted;  // 見つかった場合は返す
-			}
-		}
-		return nullptr; // 見つからなかった場合は nullptr を返す
-	}
-
+	std::shared_ptr<T> GetComponent() const;
 
 protected:
 
 	virtual void OnEnable() {}
 	virtual void OnDisable() {}
 };
+
+/// <summary>
+/// コンポーネント追加関数の実装
+/// </summary>
+/// <typeparam name="T">追加するコンポーネントの型</typeparam>
+/// <typeparam name="Args">コンポーネントのコンストラクタ引数の型</typeparam>
+/// <param name="args">コンポーネントのコンストラクタ引数</param>
+/// <returns>追加したコンポーネントの共有ポインタ</returns>
+template<typename T, typename ...Args>
+inline std::shared_ptr<T> Entity::AddComponent(Args && ...args)
+{
+	// TがComponentの派生クラスであることを確認
+	static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
+
+	// コンポーネントを生成
+	std::shared_ptr<T> newComp = std::make_shared<T>(std::forward<Args>(args)...);
+
+	// 親ポインタを設定
+	newComp->SetOwner(this);
+
+	// リストに追加
+	m_components.push_back(newComp);
+	return newComp; // 追加したコンポーネントを返す
+}
+
+/// <summary>
+/// 特定の型のコンポーネントを取得する関数の実装
+/// </summary>
+/// <typeparam name="T">取得するコンポーネントの型</typeparam>
+/// <returns>取得したコンポーネントの共有ポインタ、見つからなかった場合はnullptr</returns>
+template<typename T>
+inline std::shared_ptr<T> Entity::GetComponent() const
+{
+	for (const auto& comp : m_components)
+	{
+		if (std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(comp))
+		{
+			return casted;  // 見つかった場合は返す
+		}
+	}
+	return nullptr; // 見つからなかった場合は nullptr を返す
+}

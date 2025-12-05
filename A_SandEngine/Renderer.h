@@ -32,11 +32,11 @@ enum BLENDSTATE
 class Renderer
 {
 private:
-    ComPtr<ID3D11Device> m_device;                           // GPUを抽象化したデバイス
-    ComPtr<ID3D11DeviceContext> m_deviceContext;             // 描画コマンドを実行するコンテキスト
-    ComPtr<IDXGISwapChain> m_swapChain;                      // ウィンドウに描画するためのバッファ管理
-    ComPtr<ID3D11RenderTargetView> m_renderTargetView;       // 描画の出力先ビュー
-	ComPtr<ID3D11DepthStencilView> m_depthStencilView;       // 深度ステンシルビュー
+	Microsoft::WRL::ComPtr<ID3D11Device> m_device;                           // GPUを抽象化したデバイス
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;             // 描画コマンドを実行するコンテキスト
+    Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;                      // ウィンドウに描画するためのバッファ管理
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;       // 描画の出力先ビュー
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;       // 深度ステンシルビュー
 
 	ComPtr<ID3D11Buffer> m_worldBuffer;                      // 定数バッファ (ワールド行列用)
 	ComPtr<ID3D11Buffer> m_viewBuffer;                       // 定数バッファ (ビュー行列用)
@@ -60,6 +60,10 @@ public:
 	void Begin();																// 描画開始
 	void End();																	// 描画終了
 
+	//シェーダーの作成関数
+	bool CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
+	bool CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
+
 	//セッター
 
 	// ブレンドステート設定
@@ -82,9 +86,7 @@ public:
 	// ゲッター
 	
 	// デバイス取得
-	ComPtr<ID3D11Device> GetDevice() { return m_device; }
+	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return m_device; }
 	// デバイスコンテキスト取得
-	ComPtr<ID3D11DeviceContext> GetDeviceContext() { return m_deviceContext; }
-
-
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext() { return m_deviceContext; }
 };

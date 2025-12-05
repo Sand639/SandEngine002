@@ -57,7 +57,6 @@ bool Mesh::Init(ID3D11Device* device, const std::vector<Vertex>& vertices, const
     // エラーチェック
     if (!Debug::CheckHR(hr, L"インデックスバッファの作成に失敗しました")) return false;
 
-
     return true;
 }
 
@@ -69,6 +68,8 @@ bool Mesh::Init(ID3D11Device* device, const std::vector<Vertex>& vertices, const
 /// returns>なし</returns>
 void Mesh::Draw(ID3D11DeviceContext* context)
 {
+    //Debug::Log("Mesh Draw");
+
     UINT offset = 0;
 
 	// パイプラインに頂点バッファ、インデックスバッファを設定
