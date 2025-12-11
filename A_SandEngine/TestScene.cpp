@@ -94,8 +94,9 @@ void TestScene::Update()
 	auto transform = m_testEntity->GetComponent<Transform>();
 	if (transform)
 	{
-		// 毎フレーム Y 回転を少し足す（単位はラジアン想定）
-		transform->Rotate(0.0f, 0.01f, 0.0f);
+		transform->Rotate(0.0f, 0.0f, 0.01f);
+
+		transform->Translate(0.01f, 0.0f, 0.0f);
 
 		//Debug::Log("Entity Position: ({:.2f}, {:.2f}, {:.2f})",
 		//	transform->GetRotation().x,

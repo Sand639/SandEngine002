@@ -15,18 +15,28 @@
 void VSMain(in VS_IN In, out VS_OUT Out)
 {
 
-    // 座標変換なしでそのまま出力
-    Out.position = float4(In.position.xy, 0.5f, 1.0f);
-    
-    //
-    Out.color = GetBaseColor();
-    
-    //matrix wvp;
-    //wvp = mul(World, View);
-    //wvp = mul(wvp, Projection);
+    // 位置を float4 に（w = 1）
+    float4 localPos = float4(In.position, 1.0f);
 
-    //Out.position = mul(In.position, wvp);
-    //Out.texCoord = In.texCoord;
+    // WVP 行列を作成
+    matrix wvp = mul(World, View);
+    wvp = mul(wvp, Projection);
 
-    ////Out.Depth = Out.Position.z; //深度値を計算して出力
+    // クリップ空間へ変換
+    Out.position = mul(localPos, wvp);
+
+    // ワールド座標も一応出しておく（あとでライトで使える）
+    Out.worldPosition = mul(localPos, World);
+
+    // 法線もワールド空間に
+    Out.normal = normalize(mul(float4(In.normal, 0.0f), World));
+
+    // カラーは今まで通りマテリアルから
+    Out.color = In.color;
+
+    // UV もそのまま通しておく（将来テクスチャ用）
+    Out.texCoord = In.texCoord;
+
+    // 深度値
+    Out.depth = Out.position.z;
 }

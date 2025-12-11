@@ -169,6 +169,8 @@ void GameEngine::Draw()
 	m_renderer->Begin();
 	// ‚±‚±‚Å•`‰æˆ—
 
+	m_renderer->SetWorldViewProjection3D();
+
 	if (m_currentScene)
 		m_currentScene->Draw();
 
