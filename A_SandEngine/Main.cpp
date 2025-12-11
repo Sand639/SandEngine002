@@ -23,6 +23,7 @@
 #include <memory>		// スマートポインタを使う
 #include "GameEngine.h" // ゲームエンジンクラス
 
+
 //=======================================================
 // グローバル定数定義
 //=======================================================
@@ -45,7 +46,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In
 	auto& engine = GameEngine::GetInstance();
 
 	// ゲームエンジンの初期化
-	if (!engine.Init(hInstance, WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT))
+	if (!engine.Init(hInstance))
 	{
 		// 初期化失敗時は終了
 		return 1;

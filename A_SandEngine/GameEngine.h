@@ -14,7 +14,10 @@
 #include "FrameTimer.h" // フレームタイマークラス
 #include "Renderer.h"   // レンダラクラス
 #include "scene.h"      // シーンクラス
+#include "Config.h"     // Window画面設定構造体
 
+#define WINDOW_WIDTH m_config.width   // ウィンドウの幅
+#define WINDOW_HEIGHT m_config.height  // ウィンドウの高さ
 
 /// <summary>
 /// ゲームエンジン本体
@@ -38,8 +41,11 @@ private:
 	// 現在のシーン
 	std::shared_ptr<Scene> m_currentScene;
 
-	//次のシーン
+	// 次のシーン
 	std::shared_ptr<Scene> m_nextScene;
+
+	// Window設定構造体
+	Config m_config{};
 
 private:
 
@@ -68,7 +74,7 @@ public:
     ~GameEngine() { Uninit(); }
 
     // 初期化処理関数
-    bool Init(HINSTANCE hInstance, const wchar_t* title, int width, int height);
+    bool Init(HINSTANCE hInstance);
 
     // メインループ処理関数
     int Run();

@@ -26,9 +26,11 @@ class Transform : public Component
 {
 private:
     // 変換情報
-    DirectX::XMFLOAT3 m_position; // 位置 (X, Y, Z)
-    DirectX::XMFLOAT3 m_rotation; // 回転 (ピッチ、ヨー、ロールのオイラー角)
-    DirectX::XMFLOAT3 m_scale;    // スケール (X, Y, Z)
+    DirectX::XMFLOAT3 m_position;       // 位置 (X, Y, Z)
+    DirectX::XMFLOAT3 m_rotationEuler;  // 回転 (ピッチ、ヨー、ロールのオイラー角)
+    DirectX::XMFLOAT3 m_scale;          // スケール (X, Y, Z)
+
+	DirectX::XMFLOAT4 m_rotationQuat; // 回転 (クォータニオン)
 
     // 行列計算結果
     mutable DirectX::XMMATRIX m_worldMatrix; // ワールド行列 (キャッシュ用)
@@ -55,11 +57,16 @@ public:
     }
 
     // 回転 (ここではオイラー角を想定)
-    const DirectX::XMFLOAT3& GetRotation() const { return m_rotation; }
-    void SetRotation(const DirectX::XMFLOAT3& rotation) { m_rotation = rotation; m_isDirty = true; }
+    const DirectX::XMFLOAT3& GetRotation() const { return m_rotationEuler; }
+    void SetRotation(const DirectX::XMFLOAT3& rotation) { m_rotationEuler = rotation; m_isDirty = true; }
     void SetRotation(float x, float y, float z)
     {
-        m_rotation = DirectX::XMFLOAT3(x, y, z);
+        m_rotationEuler = DirectX::XMFLOAT3(x, y, z);
+
+		// オイラー角からクォータニオンを計算して保存
+        DirectX::XMVECTOR q = DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
+        DirectX::XMStoreFloat4(&m_rotationQuat, q);
+
         m_isDirty = true;
     }
 
@@ -71,6 +78,9 @@ public:
         m_scale = DirectX::XMFLOAT3(x, y, z);
         m_isDirty = true;
     }
+
+    //クォータニオン
+	const DirectX::XMFLOAT4& GetRotationQuat() const { return m_rotationQuat; }
 
     // ワールド行列の取得
     const DirectX::XMMATRIX& GetWorldMatrix() const;

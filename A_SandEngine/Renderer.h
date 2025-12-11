@@ -15,8 +15,20 @@
 #include <DirectXMath.h>// DirectXMath (数学ライブラリ)
 #include "main.h"		// デフォルトのスクリーンサイズ定義
 
+//=======================================================
+// 名前空間
+//=======================================================
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+//=======================================================
+// 前方宣言
+//=======================================================
+struct CB_Material;
+
+//=======================================================
+// 列挙体定義
+//=======================================================
 
 //ブレンドステート定義
 enum BLENDSTATE
@@ -32,21 +44,22 @@ enum BLENDSTATE
 class Renderer
 {
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device> m_device;                           // GPUを抽象化したデバイス
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;             // 描画コマンドを実行するコンテキスト
-    Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;                      // ウィンドウに描画するためのバッファ管理
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;       // 描画の出力先ビュー
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;       // 深度ステンシルビュー
+	Microsoft::WRL::ComPtr<ID3D11Device> m_device;						// GPUを抽象化したデバイス
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;		// 描画コマンドを実行するコンテキスト
+    Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;					// ウィンドウに描画するためのバッファ管理
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;	// 描画の出力先ビュー
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;	// 深度ステンシルビュー
 
-	ComPtr<ID3D11Buffer> m_worldBuffer;                      // 定数バッファ (ワールド行列用)
-	ComPtr<ID3D11Buffer> m_viewBuffer;                       // 定数バッファ (ビュー行列用)
-	ComPtr<ID3D11Buffer> m_projectionBuffer;    				// 定数バッファ (射影行列用)
+	ComPtr<ID3D11Buffer> m_worldBuffer;						// 定数バッファ (ワールド行列用)
+	ComPtr<ID3D11Buffer> m_viewBuffer;						// 定数バッファ (ビュー行列用)
+	ComPtr<ID3D11Buffer> m_projectionBuffer;    			// 定数バッファ (射影行列用)
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_materialBuffer;	// 定数バッファ (マテリアル用)
 
 
-	ComPtr< ID3D11DepthStencilState> m_depthStateEnable;     // 深度ステンシルステート 有効
-	ComPtr< ID3D11DepthStencilState> m_depthStateDisable;    // 深度ステンシルステート 無効
+	ComPtr< ID3D11DepthStencilState> m_depthStateEnable;	// 深度ステンシルステート 有効
+	ComPtr< ID3D11DepthStencilState> m_depthStateDisable;	// 深度ステンシルステート 無効
 
-	ComPtr<ID3D11BlendState> m_blendState[BLENDSTATE_MAX];   // ブレンドステート配列
+	ComPtr<ID3D11BlendState> m_blendState[BLENDSTATE_MAX];	 // ブレンドステート配列
 
 public:
 
@@ -64,7 +77,7 @@ public:
 	bool CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
 	bool CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
 
-	//セッター
+	// --- セッター / ゲッター ---
 
 	// ブレンドステート設定
 	void SetBlendState(BLENDSTATE _blend);
@@ -83,10 +96,14 @@ public:
 	void SetViewMatrix(DirectX::XMMATRIX _viewMatrix);
 	void SetProjectionMatrix(DirectX::XMMATRIX _projectionMatrix);
 
-	// ゲッター
+	// マテリアル用定数バッファ取得
+	void SetMaterial(const CB_Material& data);
+	ID3D11Buffer* GetMaterialBuffer() const { return m_materialBuffer.Get(); }
 	
 	// デバイス取得
 	Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return m_device; }
 	// デバイスコンテキスト取得
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext() { return m_deviceContext; }
+
+
 };

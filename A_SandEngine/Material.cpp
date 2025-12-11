@@ -14,7 +14,21 @@
 #include "GameEngine.h"
 #include "Debug.h"
 
-void Material::ChangeShader(SHADERMODE _shaderMode)
+//コンストラクタ
+Material::Material() :
+	m_vertexShader(nullptr),
+	m_pixelShader(nullptr),
+	m_inputLayout(nullptr),
+	m_prevShaderMode(SHADERMODE_MAX),
+	m_blendState(BLENDSTATE_ALFA)
+{
+	//デフォルトのマテリアルパラメータを設定
+	m_cbData.Param0 = { 1.0f, 1.0f, 1.0f, 1.0f }; // BaseColor + Alpha
+	m_cbData.Param1 = { 0.0f, 0.0f, 0.0f, 0.0f }; // Emissive + Metallic
+	m_cbData.Param2 = { 1.0f, 0.0f, 0.0f, 0.0f }; // Roughness=1 とか
+}
+
+void Material::SetShader(SHADERMODE _shaderMode)
 {
 	//前回のモードと今回のモードならそのまま使用
 	if (m_prevShaderMode == _shaderMode)return;
@@ -33,26 +47,25 @@ void Material::ChangeShader(SHADERMODE _shaderMode)
 	m_prevShaderMode = _shaderMode;
 }
 
-void Material::Apply(ID3D11DeviceContext* context)
+
+
+/// <summary>
+/// マテリアルの設定を適応する関数
+/// </summary>
+/// <param name="context">デバイスコンテキスト</param>
+void Material::Apply()
 {
-
-	if (!m_vertexShader)
+	//シェーダーが設定されていない場合、警告を出してデフォルトのシェーダーを設定
+	if (!m_vertexShader || !m_pixelShader || !m_inputLayout)
 	{
-		Debug::LogWarning("Material::Apply - 頂点シェーダーが設定されていません");
-		return;
+		Debug::LogWarning("Material::Apply - シェーダーが設定されていません");
+		
+		//デフォルトのシェーダーを設定
+		SetShader(SHADERMODE_COLOR);
 	}
 
-	if (!m_pixelShader)
-	{
-		Debug::LogWarning("Material::Apply - ピクセルシェーダーが設定されていません");
-		return;
-	}
-
-	if (!m_inputLayout)
-	{
-		Debug::LogWarning("Material::Apply - 入力レイアウトが設定されていません");
-		return;
-	}
+	auto renderer = GameEngine::GetInstance().GetRenderer();
+	auto context = renderer->GetDeviceContext();
 
 	//シェーダーをセット
 	context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
@@ -60,5 +73,10 @@ void Material::Apply(ID3D11DeviceContext* context)
 	//入力レイアウトをセット
 	context->IASetInputLayout(m_inputLayout.Get());
 
-	//Debug::Log("Material Apply");
+	//ブレンドステートをセット
+	renderer->SetBlendState(m_blendState);
+
+
+	//マテリアル用定数バッファをセット
+	renderer->SetMaterial(m_cbData);
 }

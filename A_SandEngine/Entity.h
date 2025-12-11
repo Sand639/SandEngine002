@@ -22,7 +22,7 @@
 /// <remarks>
 /// ゲーム内のエンティティの基底クラス
 /// </remarks>
-class Entity
+class Entity : public std::enable_shared_from_this<Entity>
 {
 protected:
 
@@ -119,10 +119,13 @@ inline std::shared_ptr<T> Entity::AddComponent(Args && ...args)
 	std::shared_ptr<T> newComp = std::make_shared<T>(std::forward<Args>(args)...);
 
 	// 親ポインタを設定
-	newComp->SetOwner(this);
+	newComp->SetOwner(shared_from_this());
 
 	// リストに追加
 	m_components.push_back(newComp);
+
+	newComp->Awake(); // Awakeを呼び出す
+
 	return newComp; // 追加したコンポーネントを返す
 }
 
