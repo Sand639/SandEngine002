@@ -14,8 +14,11 @@
 #include "Renderer.h"   // レンダラークラス
 #include "TestScene.h"  // テストシーンクラス
 #include "DebugConsole.h" // デバッグコンソールクラス
-#include "Material.h"  // マテリアルクラス
-#include "Mesh.h"
+
+#include "Debug.h"			// デバッグクラス
+#include "Config.h"			// 設定構造体
+#include "ConfigLoader.h"	// 設定ファイルローダークラス
+#include "StringConvert.h"	// 文字列変換クラス
 
 /// <summary>
 /// 初期化処理関数
@@ -25,14 +28,28 @@
 /// <param name="width">ウィンドウの横のサイズ</param>
 /// <param name="height">ウィンドウの縦のサイズ</param>
 /// <returns>初期化が成功したかの判定</returns>
-bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int height)
+bool GameEngine::Init(HINSTANCE hInstance)
 {
+	// 0. 設定ファイルの読み込み
+	Config config{};
+
+	if (!LoadConfig("config.json", config))
+	{
+		Debug::LogError("設定ファイルの読み込みに失敗しました: config.json");
+		return false;
+	}
+
+	m_config = config;
+
+	// ウィンドウタイトルをワイド文字列に変換
+	std::wstring titleWide = StringConvert::ToWideString(config.title);
+
 
 	// 1. Windowクラスの生成
 	m_window = std::make_unique<Window>();
 
 	// Windowの初期化。失敗したらUninitを呼び出し、falseを返す
-	if (!m_window->Init(hInstance, title, width, height))
+	if (!m_window->Init(hInstance, titleWide.c_str(), config.width, config.height))
 	{
 		Uninit();       // 終了処理
 		return false;   // 初期化失敗
@@ -42,7 +59,7 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 	m_renderer = std::make_unique<Renderer>();
 
 	// Rendererの初期化。失敗したらUninitを呼び出し、falseを返す
-	if (!m_renderer->Init(m_window->GetHandle(), width, height))
+	if (!m_renderer->Init(m_window->GetHandle(), config.width, config.height))
 	{
 		Uninit();       // 終了処理
 		return false;   // 初期化失敗
@@ -63,6 +80,13 @@ bool GameEngine::Init(HINSTANCE hInstance, const wchar_t* title, int width, int 
 	//今はとりあえずTestSceneをセットしておく
 	m_currentScene = std::make_unique<TestScene>();
 	m_currentScene->Init();
+
+
+
+
+
+
+
 
 	return true;
 }
@@ -144,6 +168,8 @@ void GameEngine::Draw()
 	// 描画開始
 	m_renderer->Begin();
 	// ここで描画処理
+
+	m_renderer->SetWorldViewProjection3D();
 
 	if (m_currentScene)
 		m_currentScene->Draw();

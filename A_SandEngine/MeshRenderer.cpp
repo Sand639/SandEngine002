@@ -9,10 +9,11 @@
 //=======================================================
 // インクルード
 //=======================================================
-#include "MeshRenderer.h"
-#include "Renderer.h"
-#include "GameEngine.h"
-#include "Debug.h"
+#include "MeshRenderer.h"   // メッシュレンダラークラス
+#include "Renderer.h"       // レンダラークラス
+#include "GameEngine.h"     // ゲームエンジンクラス
+#include "Debug.h"          // デバッグクラス    
+#include "Transform.h"      // トランスフォームコンポーネントクラス
 
 /// <summary>
 /// コンストラクタ
@@ -56,8 +57,19 @@ void MeshRenderer::Draw()
         return;
     }
 
+    auto transform = GetOwner()->GetComponent<Transform>();
+    
+    if (!transform)
+    {
+        Debug::LogWarning("MeshRenderer::Draw - Transformが設定されていません");
+        return;
+    }
+
+	// ワールド行列をマテリアルに設定
+	GameEngine::GetInstance().GetRenderer()->SetWorldMatrix(transform->GetWorldMatrix());
+
     // マテリアルを適用
-    m_material->Apply(context.Get());
+    m_material->Apply();
 
     // メッシュを描画
     m_mesh->Draw(context.Get());

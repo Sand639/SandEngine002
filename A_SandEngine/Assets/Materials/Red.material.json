@@ -1,0 +1,11 @@
+{
+  "shaderMode": "SHADERMODE_COLOR",
+  "blendState": "BLENDSTATE_ALFA",
+
+  "params": {
+    "BaseColor": [1.0, 0.2, 0.2, 1.0],
+    "Emissive": [0.0, 0.0, 0.0],
+    "Metallic": 0.1,
+    "Roughness": 0.5
+  }
+}

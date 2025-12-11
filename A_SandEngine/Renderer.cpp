@@ -12,6 +12,7 @@
 #include "Renderer.h"		// レンダラークラス
 #include "MessageBox.h"		// メッセージボックスラッパークラス
 #include "Debug.h"			// デバッグクラス
+#include "Material.h"		// マテリアルクラス
 #include <d3dcompiler.h>	// シェーダーコンパイラ
 #include <io.h>				// ファイル操作	
 
@@ -286,35 +287,52 @@ bool Renderer::Init(HWND hWnd, int width, int height)
 		bd.ByteWidth = sizeof(XMFLOAT4X4); // バッファのサイズ
 
 		// ワールド行列用定数バッファの作成
-		hr = m_device->CreateBuffer(&bd, NULL, m_worldBuffer.GetAddressOf());
+		hr = m_device->CreateBuffer(&bd, nullptr, m_worldBuffer.GetAddressOf());
 		
 		// エラーチェック
 		if (!Debug::CheckHR(hr, L"定数バッファ(ワールド行列)の作成に失敗しました")) return false;
 	
 		// パイプラインに定数バッファを設定
-		ID3D11Buffer* worldCB = m_worldBuffer.Get();
-		m_deviceContext->VSSetConstantBuffers(0, 1, &worldCB);
+		ID3D11Buffer* cb = m_worldBuffer.Get();
+		m_deviceContext->VSSetConstantBuffers(0, 1, &cb);
+		m_deviceContext->PSSetConstantBuffers(0, 1, &cb);
 
 	
 		// ビュー行列用定数バッファの作成
-		hr = m_device->CreateBuffer(&bd, NULL, m_viewBuffer.GetAddressOf());
+		hr = m_device->CreateBuffer(&bd, nullptr, m_viewBuffer.GetAddressOf());
 
 		// エラーチェック
-		if (!Debug::CheckHR(hr, L"定数バッファ(ビュー行列)(の作成に失敗しました")) return false;
+		if (!Debug::CheckHR(hr, L"定数バッファ(ビュー行列)の作成に失敗しました")) return false;
 
 		// パイプラインに定数バッファを設定
-		ID3D11Buffer* viewCB = m_viewBuffer.Get();
-		m_deviceContext->VSSetConstantBuffers(1, 1, &viewCB);
+		cb = m_viewBuffer.Get();
+		m_deviceContext->VSSetConstantBuffers(1, 1, &cb);
+		m_deviceContext->PSSetConstantBuffers(1, 1, &cb);
 
 		// 射影行列用定数バッファの作成
-		hr = m_device->CreateBuffer(&bd, NULL, m_projectionBuffer.GetAddressOf());
+		hr = m_device->CreateBuffer(&bd, nullptr, m_projectionBuffer.GetAddressOf());
 
 		// エラーチェック
 		if (!Debug::CheckHR(hr, L"定数バッファ(射影行列)の作成に失敗しました")) return false;
 
 		// パイプラインに定数バッファを設定
-		ID3D11Buffer* projectionCB = m_projectionBuffer.Get();
-		m_deviceContext->VSSetConstantBuffers(2, 1, &projectionCB);
+		cb = m_projectionBuffer.Get();
+		m_deviceContext->VSSetConstantBuffers(2, 1, &cb);
+		m_deviceContext->PSSetConstantBuffers(2, 1, &cb);
+
+
+		// マテリアル用定数バッファの作成
+		bd.ByteWidth = sizeof(CB_Material); // バッファのサイズ
+
+		hr = m_device->CreateBuffer(&bd, nullptr, m_materialBuffer.GetAddressOf());
+
+		// エラーチェック
+		if (!Debug::CheckHR(hr, L"定数バッファ(マテリアル)の作成に失敗しました")) return false;
+
+		// パイプラインに定数バッファを設定
+		cb = m_materialBuffer.Get();
+		m_deviceContext->VSSetConstantBuffers(3, 1, &cb);
+		m_deviceContext->PSSetConstantBuffers(3, 1, &cb);
 
 	}
 
@@ -540,6 +558,7 @@ void Renderer::ResetWorldViewProjection3D()
 	SetProjectionMatrix(XMMatrixIdentity());
 }
 
+//ワールド行列設定関数
 void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix)
 {
 	XMFLOAT4X4 worldf;
@@ -547,6 +566,7 @@ void Renderer::SetWorldMatrix(XMMATRIX WorldMatrix)
 	m_deviceContext->UpdateSubresource(m_worldBuffer.Get(), 0, NULL, &worldf, 0, 0);
 }
 
+//ビュー行列設定関数
 void Renderer::SetViewMatrix(XMMATRIX ViewMatrix)
 {
 	XMFLOAT4X4 viewf;
@@ -554,10 +574,17 @@ void Renderer::SetViewMatrix(XMMATRIX ViewMatrix)
 	m_deviceContext->UpdateSubresource(m_viewBuffer.Get(), 0, NULL, &viewf, 0, 0);
 }
 
+//プロジェクション行列設定関数
 void Renderer::SetProjectionMatrix(XMMATRIX ProjectionMatrix)
 {
 	XMFLOAT4X4 projectionf;
 	XMStoreFloat4x4(&projectionf, XMMatrixTranspose(ProjectionMatrix));
 	m_deviceContext->UpdateSubresource(m_projectionBuffer.Get(), 0, NULL, &projectionf, 0, 0);
 
+}
+
+//マテリアル設定関数
+void Renderer::SetMaterial(const CB_Material& data)
+{
+	m_deviceContext->UpdateSubresource(m_materialBuffer.Get(), 0, NULL, &data, 0, 0);
 }
