@@ -12,6 +12,7 @@
 #include <d3d11.h>          // Direct3D11
 #include <wrl/client.h>     // Microsoft::WRL::ComPtr
 #include <DirectXMath.h>    // DirectXMath
+#include <string>           // std::string
 
 //=======================================================
 // 前方宣言
@@ -89,6 +90,9 @@ private:
     CB_Material m_cbData{};
 
 public:
+
+    //JSONファイルロード
+    bool LoadFromJson(const std::string& path);
 
 	// コンストラクタ・デストラクタ
     Material();

@@ -181,10 +181,10 @@
     <FxCompile Include="shader\common.hlsli">
       <Filter>Graphics\shader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\ColorOnlyPS.hlsl">
+    <FxCompile Include="shader\ColorOnlyVS.hlsl">
       <Filter>Graphics\shader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\ColorOnlyVS.hlsl">
+    <FxCompile Include="shader\ColorOnlyPS.hlsl">
       <Filter>Graphics\shader</Filter>
     </FxCompile>
   </ItemGroup>

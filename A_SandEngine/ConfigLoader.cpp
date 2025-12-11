@@ -16,7 +16,9 @@
 #include "Config.h"             // Config struct 用
 #include "Debug.h"              // デバッグ用
 
-// nlohmann::json のエイリアス
+//=======================================================
+// 型エイリアス
+//=======================================================
 using json = nlohmann::json;
 
 
@@ -32,7 +34,7 @@ bool LoadConfig(const std::string& path, Config& outConfig)
     std::ifstream f(path);
     if (!f)
     {
-		Debug::LogError("ファイルが見つかりませんでした : " + path);
+		Debug::LogError("ConfigのJSONファイルが開けません : " + path);
         return false;
     }
 

@@ -70,10 +70,7 @@ void TestScene::Start()
 	meshRenderer->SetMesh(mesh);
 
 	std::shared_ptr<Material> material = std::make_shared<Material>();
-	material->SetShader(SHADERMODE_COLOR);
-	material->SetBaseColor({ 1, 0, 0, 1 });
-	material->SetMetallic(0.0f);
-	material->SetRoughness(1.0f);
+	material->LoadFromJson("Assets/Materials/Red.material.json");
 
 	meshRenderer->SetMaterial(material);
 
