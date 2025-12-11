@@ -15,12 +15,15 @@ using namespace DirectX;    // DirectXMath名前空間を使用
 //コンストラクタ
 Transform::Transform() :
 	m_position(0.0f, 0.0f, 0.0f),	// 初期位置を原点に設定
-	m_rotation(0.0f, 0.0f, 0.0f),	// 初期回転をゼロに設定
+	m_rotationEuler(0.0f, 0.0f, 0.0f),	// 初期回転をゼロに設定
 	m_scale(1.0f, 1.0f, 1.0f),		// 初期スケールを1に設定
 	m_isDirty(true)					// 初期状態では変更フラグを立てる
 {
 	// 初期状態ではワールド行列を単位行列に設定
 	m_worldMatrix = XMMatrixIdentity();
+
+    // クォータニオンの単位回転（回転なし）
+    m_rotationQuat = DirectX::XMFLOAT4(0, 0, 0, 1);
 }
 
 
@@ -40,10 +43,12 @@ void Transform::Translate(float dx, float dy, float dz)
 /// </summary>
 void Transform::Rotate(float dx, float dy, float dz)
 {
-    m_rotation.x += dx;
-    m_rotation.y += dy;
-    m_rotation.z += dz;
-	m_isDirty = true; // 回転が変わったのでフラグを立てる
+    float x = m_rotationEuler.x + dx;
+    float y = m_rotationEuler.y + dy;
+    float z = m_rotationEuler.z + dz;
+
+    SetRotation(x, y, z);
+
 }
 
 /// <summary>
@@ -56,14 +61,10 @@ const XMMATRIX& Transform::GetWorldMatrix() const
     {
         // スケール行列 (S) を作成
         XMMATRIX S = XMMatrixScalingFromVector(XMLoadFloat3(&m_scale));
-
-        // 回転行列 (R) を作成 (オイラー角から)
-        // XMMatrixRotationRollPitchYaw は、X軸(ピッチ)、Y軸(ヨー)、Z軸(ロール)の順に適用
-        XMMATRIX R = XMMatrixRotationRollPitchYaw(
-            m_rotation.x, // ピッチ (X軸)
-            m_rotation.y, // ヨー (Y軸)
-            m_rotation.z  // ロール (Z軸)
-        );
+        
+		// 回転行列 (R) を作成
+        XMVECTOR q = XMLoadFloat4(&m_rotationQuat);
+        XMMATRIX R = XMMatrixRotationQuaternion(q);
 
         // 移動行列 (T) を作成
         XMMATRIX T = XMMatrixTranslationFromVector(XMLoadFloat3(&m_position));

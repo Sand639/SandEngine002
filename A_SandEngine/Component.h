@@ -29,7 +29,8 @@ class Entity;
 class Component
 {
 private:
-    Entity* m_owner = nullptr;   // 所有権は持たない
+	//このコンポーネントを所持してるEntityクラスへの弱参照
+    std::weak_ptr<Entity> m_owner;
 
 public:
     //コンストラクタ
@@ -48,9 +49,20 @@ public:
     virtual void Draw()         {}
     virtual void EndOfFrame()  {}
 
-    // 親 Entity を設定する
-    void SetOwner(Entity* owner) { m_owner = owner; }
+	// --- セッター ---
 
-    // 親 Entity を取得する
-    Entity* GetOwner() const { return m_owner; }
+    // 親 Entity を設定する
+    void SetOwner(const std::shared_ptr<Entity>& owner) { m_owner = owner; }
+
+    // --- ゲッター ---
+     
+	// 所有者への弱参照を取得します
+    std::weak_ptr<Entity> GetOwnerWeak() const {
+        return m_owner;
+    }
+
+	// 所有者への共有ポインタを取得します
+    std::shared_ptr<Entity> GetOwner() const {
+        return m_owner.lock();
+    }
 };
