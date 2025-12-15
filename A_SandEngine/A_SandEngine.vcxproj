@@ -104,6 +104,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)External\imgui;$(ProjectDir)External\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,6 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)External\imgui;$(ProjectDir)External\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,8 +133,16 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugConsole.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="External\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="External\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="External\imgui\imgui.cpp" />
+    <ClCompile Include="External\imgui\imgui_demo.cpp" />
+    <ClCompile Include="External\imgui\imgui_draw.cpp" />
+    <ClCompile Include="External\imgui\imgui_tables.cpp" />
+    <ClCompile Include="External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="ImGuiLayer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -152,8 +162,17 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugConsole.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="External\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="External\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="External\imgui\imconfig.h" />
+    <ClInclude Include="External\imgui\imgui.h" />
+    <ClInclude Include="External\imgui\imgui_internal.h" />
+    <ClInclude Include="External\imgui\imstb_rectpack.h" />
+    <ClInclude Include="External\imgui\imstb_textedit.h" />
+    <ClInclude Include="External\imgui\imstb_truetype.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="ImGuiLayer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />

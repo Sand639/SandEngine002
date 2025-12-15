@@ -20,6 +20,9 @@
 #include "ConfigLoader.h"	// 設定ファイルローダークラス
 #include "StringConvert.h"	// 文字列変換クラス
 
+#include "ImGuiLayer.h"		// ImGuiレイヤークラス
+#include "imgui.h"			// ImGui本体
+
 /// <summary>
 /// 初期化処理関数
 /// </summary>
@@ -65,10 +68,17 @@ bool GameEngine::Init(HINSTANCE hInstance)
 		return false;   // 初期化失敗
 	}
 
-	// 3. フレームタイマーの生成と初期化
+	// 3. ImGuiレイヤーの初期化
+	ImGuiLayer::Init(
+		m_window->GetHandle(),
+		m_renderer->GetDevice().Get(),
+		m_renderer->GetDeviceContext().Get()
+	);
+
+	// 4. フレームタイマーの生成と初期化
 	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
 
-	// 4. シーンの初期化
+	// 5. シーンの初期化
 	m_currentScene = nullptr;
 
 	//TODO: 前回のシーンをロードする処理を追加
@@ -124,8 +134,6 @@ int GameEngine::Run()
 		}
 	}
 
-	Uninit(); // 終了処理
-
 	return 0;
 }
 
@@ -169,10 +177,26 @@ void GameEngine::Draw()
 	m_renderer->Begin();
 	// ここで描画処理
 
+	// ImGui描画開始
+	ImGuiLayer::BeginOfDraw();
+
+	// ImGuiデモウィンドウ表示
+	if(m_showImGuiDemoWindow)
+		ImGui::ShowDemoWindow();
+
+	ImGui::SetNextWindowSize(ImVec2(200, 300));
+	ImGui::Begin(IMGUI_U8("ウィンドウ"));
+	ImGui::TextUnformatted(IMGUI_U8("日本語！！"));
+	ImGui::End();
+
+	// 3D描画用ワールド・ビュー・プロジェクション行列設定
 	m_renderer->SetWorldViewProjection3D();
 
 	if (m_currentScene)
 		m_currentScene->Draw();
+
+	// ImGui描画終了
+	ImGuiLayer::EndOfDraw();
 
 	// 描画終了
 	m_renderer->End();
@@ -198,6 +222,8 @@ void GameEngine::Uninit()
 	{
 		m_frameTimer.reset();
 	}
+
+	ImGuiLayer::Uninit();
 
 	// レンダラーの終了処理
 	if (m_renderer)

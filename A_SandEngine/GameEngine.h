@@ -47,6 +47,8 @@ private:
 	// Window設定構造体
 	Config m_config{};
 
+	bool m_showImGuiDemoWindow = true;
+
 private:
 
     // ライフサイクル
