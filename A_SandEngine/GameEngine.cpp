@@ -155,6 +155,12 @@ void GameEngine::Start()
 
 void GameEngine::Update()
 {
+	// F1トグル（押した瞬間だけ反応）
+	const bool f1Down = (GetAsyncKeyState(VK_F1) & 0x8000) != 0;
+	if (f1Down && !m_prevF1Down)
+		m_showHierarchy = !m_showHierarchy;
+	m_prevF1Down = f1Down;
+
 	if (m_currentScene)
 		m_currentScene->Update();
 }
@@ -184,10 +190,34 @@ void GameEngine::Draw()
 	if(m_showImGuiDemoWindow)
 		ImGui::ShowDemoWindow();
 
-	ImGui::SetNextWindowSize(ImVec2(200, 300));
-	ImGui::Begin(IMGUI_U8("ウィンドウ"));
-	ImGui::TextUnformatted(IMGUI_U8("日本語！！"));
+if (m_showHierarchy && m_currentScene)
+{
+    ImGui::Begin(IMGUI_U8("ヒエラルキー"), &m_showHierarchy);
+
+    const auto& entities = m_currentScene->GetEntities();
+    for (const auto& e : entities)
+    {
+		bool selected = (m_selectedEntity == e);
+		if (ImGui::Selectable(e->GetName().c_str(), selected))
+			m_selectedEntity = e;
+    }
+
 	ImGui::End();
+
+	ImGui::Begin(IMGUI_U8("インスペクタ"));
+	if (m_selectedEntity)
+	{
+		ImGui::Text("Name: %s", m_selectedEntity->GetName().c_str());
+		// Transformがあるならここで編集（DragFloat3など）
+	}
+	else
+	{
+		ImGui::Text(IMGUI_U8("未選択"));
+	}
+	
+
+    ImGui::End();
+}
 
 	// 3D描画用ワールド・ビュー・プロジェクション行列設定
 	m_renderer->SetWorldViewProjection3D();

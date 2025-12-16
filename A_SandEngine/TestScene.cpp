@@ -17,6 +17,7 @@
 #include "MeshRenderer.h"	// メッシュレンダラクラス
 #include "GameEngine.h"		// ゲームエンジンクラス
 #include "MessageBox.h"		// メッセージボックスラッパークラス
+#include "ImGuiLayer.h"		// ImGuiレイヤークラス
 
 /// <summary>
 /// 初期化関数
@@ -44,6 +45,9 @@ void TestScene::Start()
 {
 	//テスト用のエンティティを生成
 	m_testEntity = AddEntity<Entity>();
+
+	m_testEntity->SetName(IMGUI_U8("テストEntity"));
+
 	//テスト用エンティティにTransformコンポーネントを追加
 	std::shared_ptr<Transform> transform = m_testEntity->AddComponent<Transform>();
 	transform->SetPosition(0.0f, 0.0f, 0.0f);
@@ -73,6 +77,8 @@ void TestScene::Start()
 	material->LoadFromJson("Assets/Materials/Red.material.json");
 
 	meshRenderer->SetMaterial(material);
+
+	//AddEntity<Entity>()->SetName(IMGUI_U8("テストEntityaaa"));
 
 	Scene::Start();
 }

@@ -14,7 +14,11 @@
 //=======================================================
 // マクロ定義
 //=======================================================
-#define IMGUI_U8(str) reinterpret_cast<const char*>(u8##str)
+#if __cpp_char8_t
+    #define IMGUI_U8(str) reinterpret_cast<const char*>(u8##str)
+#else
+    #define IMGUI_U8(str) u8##str
+#endif
 
 // ImGuiレイヤー
 namespace ImGuiLayer

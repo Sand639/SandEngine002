@@ -47,7 +47,11 @@ private:
 	// Windowê›íËç\ë¢ëÃ
 	Config m_config{};
 
-	bool m_showImGuiDemoWindow = true;
+	bool m_showImGuiDemoWindow = false;
+	bool m_showHierarchy = true;
+	bool m_prevF1Down = false;
+
+	std::shared_ptr<Entity> m_selectedEntity;
 
 private:
 
