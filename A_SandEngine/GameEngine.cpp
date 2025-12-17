@@ -9,19 +9,20 @@
 //=======================================================
 // インクルード
 //=======================================================
-#include "GameEngine.h" // ゲームエンジンクラス
-#include "Main.h"       // メイン関数ヘッダファイル(画面高さ、幅の定義)
-#include "Renderer.h"   // レンダラークラス
-#include "TestScene.h"  // テストシーンクラス
-#include "DebugConsole.h" // デバッグコンソールクラス
+#include "GameEngine.h"		// ゲームエンジンクラス
+#include "Main.h"			// メイン関数ヘッダファイル(画面高さ、幅の定義)
+#include "Renderer.h"		// レンダラークラス
+#include "TestScene.h"		// テストシーンクラス
+#include "DebugConsole.h"	// デバッグコンソールクラス
 
 #include "Debug.h"			// デバッグクラス
 #include "Config.h"			// 設定構造体
 #include "ConfigLoader.h"	// 設定ファイルローダークラス
 #include "StringConvert.h"	// 文字列変換クラス
 
-#include "ImGuiLayer.h"		// ImGuiレイヤークラス
-#include "imgui.h"			// ImGui本体
+#include "Input.h"			// 入力管理クラス
+
+
 
 /// <summary>
 /// 初期化処理関数
@@ -68,17 +69,18 @@ bool GameEngine::Init(HINSTANCE hInstance)
 		return false;   // 初期化失敗
 	}
 
-	// 3. ImGuiレイヤーの初期化
-	ImGuiLayer::Init(
-		m_window->GetHandle(),
-		m_renderer->GetDevice().Get(),
-		m_renderer->GetDeviceContext().Get()
-	);
+	// 3. Editorクラスの初期化
+	m_editor = std::make_unique<Editor>();
+	m_editor->Init();
+
 
 	// 4. フレームタイマーの生成と初期化
 	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
 
-	// 5. シーンの初期化
+	// 5. 入力管理クラスの初期化
+	Input::Init(); // 入力管理クラスの初期化
+
+	// 6. シーンの初期化
 	m_currentScene = nullptr;
 
 	//TODO: 前回のシーンをロードする処理を追加
@@ -88,7 +90,7 @@ bool GameEngine::Init(HINSTANCE hInstance)
 	// if (!m_currentScene) CreateDefaultScene();
 
 	//今はとりあえずTestSceneをセットしておく
-	m_currentScene = std::make_unique<TestScene>();
+	m_currentScene = std::make_shared<TestScene>();
 	m_currentScene->Init();
 
 
@@ -155,6 +157,12 @@ void GameEngine::Start()
 
 void GameEngine::Update()
 {
+	// 入力管理クラスの更新
+	Input::Update();
+
+	// エディタの更新
+	if (m_editor) m_editor->Update();
+
 	if (m_currentScene)
 		m_currentScene->Update();
 }
@@ -175,28 +183,17 @@ void GameEngine::Draw()
 {
 	// 描画開始
 	m_renderer->Begin();
-	// ここで描画処理
 
-	// ImGui描画開始
-	ImGuiLayer::BeginOfDraw();
-
-	// ImGuiデモウィンドウ表示
-	if(m_showImGuiDemoWindow)
-		ImGui::ShowDemoWindow();
-
-	ImGui::SetNextWindowSize(ImVec2(200, 300));
-	ImGui::Begin(IMGUI_U8("ウィンドウ"));
-	ImGui::TextUnformatted(IMGUI_U8("日本語！！"));
-	ImGui::End();
+	//エディタの描画
+	if (m_editor)
+		m_editor->Draw(m_currentScene);
+	
 
 	// 3D描画用ワールド・ビュー・プロジェクション行列設定
 	m_renderer->SetWorldViewProjection3D();
 
 	if (m_currentScene)
 		m_currentScene->Draw();
-
-	// ImGui描画終了
-	ImGuiLayer::EndOfDraw();
 
 	// 描画終了
 	m_renderer->End();
@@ -223,7 +220,12 @@ void GameEngine::Uninit()
 		m_frameTimer.reset();
 	}
 
-	ImGuiLayer::Uninit();
+	if (m_editor)
+	{
+		m_editor->Uninit(); // エディタの終了処理
+		m_editor.reset();
+	}
+
 
 	// レンダラーの終了処理
 	if (m_renderer)
