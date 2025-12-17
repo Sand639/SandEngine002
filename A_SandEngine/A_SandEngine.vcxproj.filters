@@ -85,6 +85,15 @@
     <Filter Include="Engine\Editor\ソースファイル">
       <UniqueIdentifier>{b96c3f71-6e3d-4ded-8fac-5e374a94c55e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Input">
+      <UniqueIdentifier>{56997212-407f-41a2-8ca3-e12ca3a69d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Input\ヘッダーファイル">
+      <UniqueIdentifier>{dd1a703e-6cb1-4ef4-a289-e39f2a54942b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Input\ソースファイル">
+      <UniqueIdentifier>{00d27408-820c-4e51-a5a9-05babbd3388b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scene.cpp">
@@ -161,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="ImGuiLayer.cpp">
       <Filter>Engine\Editor\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Engine\Editor\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Core\Input\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="ImGuiLayer.h">
       <Filter>Engine\Editor\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Engine\Editor\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Core\Input\ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

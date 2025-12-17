@@ -132,6 +132,7 @@
     <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugConsole.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="External\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="External\imgui\backends\imgui_impl_win32.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="ImGuiLayer.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -161,6 +163,7 @@
     <ClInclude Include="ConfigLoader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugConsole.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="External\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="External\imgui\backends\imgui_impl_win32.h" />
@@ -173,6 +176,7 @@
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="ImGuiLayer.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
