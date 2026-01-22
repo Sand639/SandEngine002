@@ -26,7 +26,7 @@ MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material>
 
 }
 
-void MeshRenderer::Start()
+void MeshRenderer::OnStart()
 {
 
 }

@@ -92,9 +92,18 @@ public:
 	template <typename T, typename... Args>
 	std::shared_ptr<T> AddComponent(Args&&... args);
 
+	template <typename T, typename... Args>
+	std::shared_ptr<T> AddComponentNoAwake(Args&&... args);
+
 	// 特定の型のコンポーネントを取得する関数
 	template <typename T>
 	std::shared_ptr<T> GetComponent() const;
+
+	// 全てのコンポーネントを取得する関数
+	const std::vector<std::shared_ptr<Component>>& GetComponents() const{
+		return m_components;
+	}
+
 
 protected:
 
@@ -127,6 +136,30 @@ inline std::shared_ptr<T> Entity::AddComponent(Args && ...args)
 	newComp->Awake(); // Awakeを呼び出す
 
 	return newComp; // 追加したコンポーネントを返す
+}
+
+/// <summary>
+/// コンポーネント追加関数の実装(Awakeを呼び出さないバージョン)
+/// </summary>
+/// <typeparam name="T">追加するコンポーネントの型</typeparam>
+/// <typeparam name="Args">コンポーネントのコンストラクタ引数の型</typeparam>
+/// <param name="args">コンポーネントのコンストラクタ引数</param>
+/// <returns>追加したコンポーネントの共有ポインタ</returns>
+template<typename T, typename ...Args>
+inline std::shared_ptr<T> Entity::AddComponentNoAwake(Args && ...args)
+{
+	// TがComponentの派生クラスであることを確認
+	static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
+
+	// コンポーネントを生成
+	auto newComp = std::make_shared<T>(std::forward<Args>(args)...);
+
+	// 親ポインタを設定
+	newComp->SetOwner(shared_from_this());
+
+	// リストに追加
+	m_components.push_back(newComp);
+	return newComp;		// 追加したコンポーネントを返す
 }
 
 /// <summary>

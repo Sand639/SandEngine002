@@ -75,6 +75,13 @@ bool Window::Init(HINSTANCE hInstance, const wchar_t* title, int width, int heig
 		return false;	// 登録失敗
 	}
 
+	// ウィンドウサイズを調整
+	RECT rc{ 0, 0, width, height };
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+	int winW = rc.right - rc.left;
+	int winH = rc.bottom - rc.top;
+
 	// 2. ウィンドウの作成
 	m_hWnd = CreateWindowExW(
 		0,					//拡張ウィンドウスタイル
@@ -83,8 +90,8 @@ bool Window::Init(HINSTANCE hInstance, const wchar_t* title, int width, int heig
 		WS_OVERLAPPEDWINDOW,//ウィンドウスタイル
 		CW_USEDEFAULT,		// 初期X座標
 		CW_USEDEFAULT,		// 初期Y座標
-		width,				// ウィンドウの幅
-		height,				// ウィンドウの高さ
+		winW,				// ウィンドウの幅
+		winH,				// ウィンドウの高さ
 		nullptr,			// 親ウィンドウハンドル
 		nullptr,			// メニューハンドル
 		hInstance,			// アプリケーションの識別子

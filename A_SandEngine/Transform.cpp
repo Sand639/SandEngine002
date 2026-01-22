@@ -46,8 +46,7 @@ void Transform::Rotate(float dx, float dy, float dz)
     float x = m_rotationEuler.x + dx;
     float y = m_rotationEuler.y + dy;
     float z = m_rotationEuler.z + dz;
-
-    SetRotation(x, y, z);
+    SetRotationRadians(x, y, z);
 
 }
 

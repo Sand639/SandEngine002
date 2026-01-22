@@ -152,6 +152,7 @@
     <ClCompile Include="MessageBox.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneSerializer.cpp" />
     <ClCompile Include="StringConvert.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="MessageBox.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneSerializer.h" />
     <ClInclude Include="StringConvert.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Transform.h" />

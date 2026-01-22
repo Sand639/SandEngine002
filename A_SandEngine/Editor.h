@@ -33,6 +33,8 @@ private:
 	//最後に選択したエンティティ
     std::shared_ptr<Entity> m_selectedEntity;
 
+	//最後にDrawで受け取ったシーン
+    std::shared_ptr<Scene> m_lastScene;
 
 private:
     

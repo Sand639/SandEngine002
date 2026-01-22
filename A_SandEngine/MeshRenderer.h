@@ -28,6 +28,9 @@ private:
 	std::shared_ptr<Mesh> m_mesh;
 	std::shared_ptr<Material> m_material;
 
+	std::string m_meshId = "Builtin/Triangle";
+	std::string m_materialPath = "Assets/Materials/Red.material.json";
+
 public:
 
 	// コンストラクタ・デストラクタ
@@ -35,14 +38,24 @@ public:
 	MeshRenderer(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
 	~MeshRenderer() = default;
 
-	//セッター
+	// コンポーネントの型名を取得する関数
+	const char* GetTypeName() const override { return "MeshRenderer"; }
+
+	// --- セッター・ゲッター ---
 	void SetMesh(std::shared_ptr<Mesh> mesh) { m_mesh = mesh; }
 	void SetMaterial(std::shared_ptr<Material> material) { m_material = material; }
+	std::shared_ptr<Material> GetMaterial() const { return m_material; }
+
+	void SetMeshId(const std::string& id) { m_meshId = id; }
+	const std::string& GetMeshId() const { return m_meshId; }
+
+	void SetMaterialPath(const std::string& path) { m_materialPath = path; }
+	const std::string& GetMaterialPath() const { return m_materialPath; }
 
 	// ライフサイクル関数
 
 	// 開始関数
-	void Start() override;
+	void OnStart() override;
 
 	// 描画関数
 	void Draw() override;
