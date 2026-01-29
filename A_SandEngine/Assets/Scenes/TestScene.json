@@ -1,0 +1,39 @@
+{
+    "entities": [
+        {
+            "active": true,
+            "components": [
+                {
+                    "data": {
+                        "pos": [
+                            -0.30000001192092896,
+                            0.6000000238418579,
+                            0.800000011920929
+                        ],
+                        "rot": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scl": [
+                            1.0,
+                            5.0,
+                            1.0
+                        ]
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "data": {
+                        "material": "Assets/Materials/Red.material.json",
+                        "mesh": "Builtin/Triangle"
+                    },
+                    "type": "MeshRenderer"
+                }
+            ],
+            "name": "JSONファイルで読みこんだシーンのオブジェクトだ"
+        }
+    ],
+    "sceneName": "TestScene",
+    "version": 1
+}

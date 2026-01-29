@@ -13,6 +13,11 @@
 #include "imgui.h"			// ImGui本体
 #include "GameEngine.h"		// ゲームエンジンクラス
 #include "Input.h"			// 入力管理クラス
+#include "Transform.h"		// トランスフォームコンポーネントクラス
+#include "SceneSerializer.h"// シーンシリアライザクラス
+#include "MeshRenderer.h"	// メッシュレンダラーコンポーネントクラス
+#include "InspectorRegistry.h"	// インスペクタ描画用ヘッダファイル
+
 
 /// <summary>
 /// ヒエラルキーウィンドウ描画関数
@@ -54,15 +59,28 @@ void Editor::DrawInspector()
 	if (!m_showInspector) return;
 
 	ImGui::Begin(IMGUI_U8("インスペクタ"));
+
 	if (m_selectedEntity)
 	{
-		ImGui::Text("Name: %s", m_selectedEntity->GetName().c_str(), &m_showInspector);
+		// Entity全体のInspector描画（名前、一覧、各ComponentUI）
+		Inspector::DrawEntityInspector(m_selectedEntity);
 	}
 	else
 	{
 		ImGui::Text(IMGUI_U8("未選択"));
 	}
 
+
+
+	// Scene保存は “EditorがSceneを知っている” 必要があるのでここに残す
+	if (m_selectedEntity && m_lastScene)
+	{
+		ImGui::Separator();
+		if (ImGui::Button(IMGUI_U8("Save Scene")))
+		{
+			SceneSerializer::Save(*m_lastScene, "Assets/Scenes/TestScene.json");
+		}
+	}
 
 	ImGui::End();
 
@@ -97,6 +115,8 @@ void Editor::Draw(const std::shared_ptr<Scene>& scene)
 {
 
 	if (!m_visible) return;
+
+	m_lastScene = scene;	// 最後に受け取ったシーンを保存
 
 	// エディタの描画開始
 	ImGuiLayer::BeginOfDraw();

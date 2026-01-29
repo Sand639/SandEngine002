@@ -94,6 +94,9 @@ public:
     //JSONファイルロード
     bool LoadFromJson(const std::string& path);
 
+    // JSONファイルセーブ
+    bool SaveToJson(const std::string& path) const;
+
 	// コンストラクタ・デストラクタ
     Material();
 	virtual ~Material() = default;
@@ -155,7 +158,8 @@ public:
 	void SetRoughness(float roughness) { m_cbData.Param2.x = roughness; }
 	float GetRoughness() const { return m_cbData.Param2.x; }
 
-
+	//シェーダーモードの取得
+    SHADERMODE GetShaderMode() const { return m_prevShaderMode; }
 
 
 };

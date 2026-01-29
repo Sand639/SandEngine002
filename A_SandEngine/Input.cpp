@@ -69,12 +69,7 @@ bool Input::GetAnyKeyPress()
 
 bool Input::GetAnyKeyTrigger()
 {
-	for (int i = 0; i < 256; ++i)
-	{
-		for (int i = 8; i <= 222; ++i)
-		{
-			if (GetKeyTrigger(i)) return true;
-		}
-	}
+	for (int i = 8; i <= 222; ++i)
+		if (GetKeyTrigger(i)) return true;
 	return false;
 }

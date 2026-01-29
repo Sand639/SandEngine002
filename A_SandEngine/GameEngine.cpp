@@ -21,7 +21,7 @@
 #include "StringConvert.h"	// 文字列変換クラス
 
 #include "Input.h"			// 入力管理クラス
-
+#include "SceneSerializer.h"// シーンシリアライザクラス
 
 
 /// <summary>
@@ -83,22 +83,18 @@ bool GameEngine::Init(HINSTANCE hInstance)
 	// 6. シーンの初期化
 	m_currentScene = nullptr;
 
-	//TODO: 前回のシーンをロードする処理を追加
-	// LoadScene();
+	// シーンの読み込み
+	const std::string scenePath = "Assets/Scenes/TestScene.json";
 
-	//TODO: 前回のシーンがなければデフォルトシーンを作成する処理を追加
-	// if (!m_currentScene) CreateDefaultScene();
+	// シーンのロード
+	m_currentScene = SceneSerializer::Load(scenePath);
+	if (!m_currentScene)
+	{
+		// 無ければデフォルト生成
+		m_currentScene = std::make_shared<TestScene>();
+	}
 
-	//今はとりあえずTestSceneをセットしておく
-	m_currentScene = std::make_shared<TestScene>();
 	m_currentScene->Init();
-
-
-
-
-
-
-
 
 	return true;
 }

@@ -32,6 +32,13 @@ private:
 	//このコンポーネントを所持してるEntityクラスへの弱参照
     std::weak_ptr<Entity> m_owner;
 
+    //スタート処理が保留されているかどうか
+    bool m_isStartPending = true;
+
+protected:
+    virtual void OnStart() {}
+    virtual void OnUpdate() {}
+
 public:
     //コンストラクタ
 	Component() = default;
@@ -41,13 +48,23 @@ public:
     // ライフサイクル
 
     virtual void Awake()        {}
-    virtual void Start()        {}
+    void Start() {
+        if (!m_isStartPending) return;
+        OnStart();
+        m_isStartPending = false;
+    }
     virtual void Uninit()       {}
-    virtual void Update()       {}
+    void Update() {
+        if (m_isStartPending) Start();
+        OnUpdate();
+    }
     virtual void FixedUpdate()  {}
     virtual void LateUpdate()   {}
     virtual void Draw()         {}
-    virtual void EndOfFrame()  {}
+    virtual void EndOfFrame()   {}
+
+	// コンポーネントの型名を取得する関数
+    virtual const char* GetTypeName() const = 0;
 
 	// --- セッター ---
 
@@ -65,4 +82,8 @@ public:
     std::shared_ptr<Entity> GetOwner() const {
         return m_owner.lock();
     }
+
+	// スタート保留状態の取得
+    bool GetIsStartPending() const { return m_isStartPending; }
+
 };
