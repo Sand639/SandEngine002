@@ -9,16 +9,20 @@
 //=======================================================
 // インクルード
 //=======================================================
-#include "GameEngine.h" // ゲームエンジンクラス
-#include "Main.h"       // メイン関数ヘッダファイル(画面高さ、幅の定義)
-#include "Renderer.h"   // レンダラークラス
-#include "TestScene.h"  // テストシーンクラス
-#include "DebugConsole.h" // デバッグコンソールクラス
+#include "GameEngine.h"		// ゲームエンジンクラス
+#include "Main.h"			// メイン関数ヘッダファイル(画面高さ、幅の定義)
+#include "Renderer.h"		// レンダラークラス
+#include "TestScene.h"		// テストシーンクラス
+#include "DebugConsole.h"	// デバッグコンソールクラス
 
 #include "Debug.h"			// デバッグクラス
 #include "Config.h"			// 設定構造体
 #include "ConfigLoader.h"	// 設定ファイルローダークラス
 #include "StringConvert.h"	// 文字列変換クラス
+
+#include "Input.h"			// 入力管理クラス
+#include "SceneSerializer.h"// シーンシリアライザクラス
+
 
 /// <summary>
 /// 初期化処理関数
@@ -65,28 +69,32 @@ bool GameEngine::Init(HINSTANCE hInstance)
 		return false;   // 初期化失敗
 	}
 
-	// 3. フレームタイマーの生成と初期化
+	// 3. Editorクラスの初期化
+	m_editor = std::make_unique<Editor>();
+	m_editor->Init();
+
+
+	// 4. フレームタイマーの生成と初期化
 	m_frameTimer = std::make_unique<FrameTimer>(m_fps);
 
-	// 4. シーンの初期化
+	// 5. 入力管理クラスの初期化
+	Input::Init(); // 入力管理クラスの初期化
+
+	// 6. シーンの初期化
 	m_currentScene = nullptr;
 
-	//TODO: 前回のシーンをロードする処理を追加
-	// LoadScene();
+	// シーンの読み込み
+	const std::string scenePath = "Assets/Scenes/TestScene.json";
 
-	//TODO: 前回のシーンがなければデフォルトシーンを作成する処理を追加
-	// if (!m_currentScene) CreateDefaultScene();
+	// シーンのロード
+	m_currentScene = SceneSerializer::Load(scenePath);
+	if (!m_currentScene)
+	{
+		// 無ければデフォルト生成
+		m_currentScene = std::make_shared<TestScene>();
+	}
 
-	//今はとりあえずTestSceneをセットしておく
-	m_currentScene = std::make_unique<TestScene>();
 	m_currentScene->Init();
-
-
-
-
-
-
-
 
 	return true;
 }
@@ -124,8 +132,6 @@ int GameEngine::Run()
 		}
 	}
 
-	Uninit(); // 終了処理
-
 	return 0;
 }
 
@@ -147,6 +153,12 @@ void GameEngine::Start()
 
 void GameEngine::Update()
 {
+	// 入力管理クラスの更新
+	Input::Update();
+
+	// エディタの更新
+	if (m_editor) m_editor->Update();
+
 	if (m_currentScene)
 		m_currentScene->Update();
 }
@@ -167,8 +179,13 @@ void GameEngine::Draw()
 {
 	// 描画開始
 	m_renderer->Begin();
-	// ここで描画処理
 
+	//エディタの描画
+	if (m_editor)
+		m_editor->Draw(m_currentScene);
+	
+
+	// 3D描画用ワールド・ビュー・プロジェクション行列設定
 	m_renderer->SetWorldViewProjection3D();
 
 	if (m_currentScene)
@@ -198,6 +215,13 @@ void GameEngine::Uninit()
 	{
 		m_frameTimer.reset();
 	}
+
+	if (m_editor)
+	{
+		m_editor->Uninit(); // エディタの終了処理
+		m_editor.reset();
+	}
+
 
 	// レンダラーの終了処理
 	if (m_renderer)

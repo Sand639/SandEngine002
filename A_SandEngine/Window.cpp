@@ -8,13 +8,17 @@
 //=======================================================
 // インクルード
 //=======================================================
-#include "Window.h"	// ウィンドウクラス
+#include "Window.h"		// ウィンドウクラス
 #include "MessageBox.h" // メッセージボックスラッパークラス
+
+#include <windows.h>
+
 
 //=======================================================
 // グローバル定数定義
 //=======================================================
 constexpr const wchar_t* WINDOW_CLASS_NAME = L"SandEngineWindowClass"; // ウィンドウクラス名
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);	// ImGuiのウィンドウプロシージャハンドラ
 
 /// <summary>
 /// ウィンドウプロシージャ関数(コールバック関数)
@@ -26,6 +30,10 @@ constexpr const wchar_t* WINDOW_CLASS_NAME = L"SandEngineWindowClass"; // ウィン
 /// <returns>メッセージ処理結果</returns>
 LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// ImGuiのウィンドウプロシージャハンドラを呼び出し
+	if (LRESULT r = ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return r;
+
 	// メッセージの種類に応じて処理を分岐
 	switch (message)
 	{
@@ -67,6 +75,13 @@ bool Window::Init(HINSTANCE hInstance, const wchar_t* title, int width, int heig
 		return false;	// 登録失敗
 	}
 
+	// ウィンドウサイズを調整
+	RECT rc{ 0, 0, width, height };
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+
+	int winW = rc.right - rc.left;
+	int winH = rc.bottom - rc.top;
+
 	// 2. ウィンドウの作成
 	m_hWnd = CreateWindowExW(
 		0,					//拡張ウィンドウスタイル
@@ -75,8 +90,8 @@ bool Window::Init(HINSTANCE hInstance, const wchar_t* title, int width, int heig
 		WS_OVERLAPPEDWINDOW,//ウィンドウスタイル
 		CW_USEDEFAULT,		// 初期X座標
 		CW_USEDEFAULT,		// 初期Y座標
-		width,				// ウィンドウの幅
-		height,				// ウィンドウの高さ
+		winW,				// ウィンドウの幅
+		winH,				// ウィンドウの高さ
 		nullptr,			// 親ウィンドウハンドル
 		nullptr,			// メニューハンドル
 		hInstance,			// アプリケーションの識別子

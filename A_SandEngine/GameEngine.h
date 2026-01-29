@@ -15,6 +15,8 @@
 #include "Renderer.h"   // レンダラクラス
 #include "scene.h"      // シーンクラス
 #include "Config.h"     // Window画面設定構造体
+#include "Editor.h"		// エディタクラス
+
 
 #define WINDOW_WIDTH m_config.width   // ウィンドウの幅
 #define WINDOW_HEIGHT m_config.height  // ウィンドウの高さ
@@ -37,6 +39,9 @@ private:
 
     // レンダラークラス
     std::unique_ptr<Renderer> m_renderer;
+
+	// エディタクラス
+	std::unique_ptr<Editor> m_editor;
 
 	// 現在のシーン
 	std::shared_ptr<Scene> m_currentScene;
