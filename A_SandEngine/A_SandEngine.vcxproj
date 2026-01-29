@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentSerdeRegistry.cpp" />
     <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugConsole.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="ImGuiLayer.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InspectorRegistry.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -160,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentSerdeRegistry.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigLoader.h" />
     <ClInclude Include="Debug.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="ImGuiLayer.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InspectorRegistry.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />

@@ -94,6 +94,15 @@
     <Filter Include="Core\Input\ソースファイル">
       <UniqueIdentifier>{00d27408-820c-4e51-a5a9-05babbd3388b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{6a71d79a-d21c-4988-8a7d-aa25275e7181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\ヘッダーファイル">
+      <UniqueIdentifier>{2a04d3b7-78d4-4413-b27b-230504df12bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\ソースファイル">
+      <UniqueIdentifier>{110863b3-b463-4d64-993f-05341b85c312}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scene.cpp">
@@ -176,6 +185,15 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Core\Input\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorRegistry.cpp">
+      <Filter>Engine\Editor\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentSerdeRegistry.cpp">
+      <Filter>Serialization\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneSerializer.cpp">
+      <Filter>Serialization\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +286,15 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Core\Input\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorRegistry.h">
+      <Filter>Engine\Editor\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentSerdeRegistry.h">
+      <Filter>Serialization\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneSerializer.h">
+      <Filter>Serialization\ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
