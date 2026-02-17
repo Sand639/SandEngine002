@@ -17,6 +17,7 @@
 #include "SceneSerializer.h"// シーンシリアライザクラス
 #include "MeshRenderer.h"	// メッシュレンダラーコンポーネントクラス
 #include "InspectorRegistry.h"	// インスペクタ描画用ヘッダファイル
+#include "Debug.h"
 
 
 /// <summary>
@@ -79,6 +80,7 @@ void Editor::DrawInspector()
 		if (ImGui::Button(IMGUI_U8("Save Scene")))
 		{
 			SceneSerializer::Save(*m_lastScene, "Assets/Scenes/TestScene.json");
+			Debug::Log("Save Scene -> TestScene.json");
 		}
 	}
 

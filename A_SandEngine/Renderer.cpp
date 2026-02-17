@@ -10,6 +10,7 @@
 // インクルード
 //=======================================================
 #include "Renderer.h"		// レンダラークラス
+#include "GameEngine.h"		// ゲームエンジンクラス
 #include "MessageBox.h"		// メッセージボックスラッパークラス
 #include "Debug.h"			// デバッグクラス
 #include "Material.h"		// マテリアルクラス
@@ -30,6 +31,10 @@ using namespace DirectX;
 /// <returns>初期化が成功したかの判定</returns>
 bool Renderer::Init(HWND hWnd, int width, int height)
 {
+	// 画面サイズをメンバ変数に保存
+	m_width = width;
+	m_height = height;
+
 	// 戻り値用変数
 	HRESULT hr = S_OK;
 	
@@ -531,7 +536,7 @@ void Renderer::SetWorldViewProjection2D()
 	SetViewMatrix(XMMatrixIdentity());
 
 	XMMATRIX projection;
-	projection = XMMatrixOrthographicOffCenterLH(0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f, 0.0f, 1.0f);
+	projection = XMMatrixOrthographicOffCenterLH(0.0f, GameEngine::GetInstance().GetWindowWidth(), GameEngine::GetInstance().GetWindowHeight(), 0.0f, 0.0f, 1.0f);
 	SetProjectionMatrix(projection);
 
 }
@@ -546,7 +551,7 @@ void Renderer::SetWorldViewProjection3D()
 	XMMATRIX view = XMMatrixLookAtLH(eye, at, up);
 	SetViewMatrix(view);
 	XMMATRIX projection;
-	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 1000.0f);
+	projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), (float)GameEngine::GetInstance().GetWindowWidth() / (float)GameEngine::GetInstance().GetWindowHeight(), 0.1f, 1000.0f);
 	SetProjectionMatrix(projection);
 }
 

@@ -17,10 +17,6 @@
 #include "Config.h"     // Window画面設定構造体
 #include "Editor.h"		// エディタクラス
 
-
-#define WINDOW_WIDTH m_config.width   // ウィンドウの幅
-#define WINDOW_HEIGHT m_config.height  // ウィンドウの高さ
-
 /// <summary>
 /// ゲームエンジン本体
 /// </summary>
@@ -126,5 +122,8 @@ public:
 		return 0.0f;
 	}
 
+	// ウィンドウの幅と高さを取得
+	int GetWindowWidth()  const { return m_config.width; }
+	int GetWindowHeight() const { return m_config.height; }
 
 };

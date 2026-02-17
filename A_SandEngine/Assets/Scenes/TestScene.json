@@ -6,9 +6,9 @@
                 {
                     "data": {
                         "pos": [
-                            -0.30000001192092896,
-                            0.6000000238418579,
-                            0.800000011920929
+                            0.0,
+                            0.0,
+                            -5.0
                         ],
                         "rot": [
                             0.0,
@@ -17,7 +17,7 @@
                         ],
                         "scl": [
                             1.0,
-                            5.0,
+                            1.0,
                             1.0
                         ]
                     },
@@ -25,13 +25,81 @@
                 },
                 {
                     "data": {
-                        "material": "Assets/Materials/Red.material.json",
+                        "far": 100.0,
+                        "fov": 60.0,
+                        "main": true,
+                        "near": 0.10000000149011612
+                    },
+                    "type": "Camera"
+                }
+            ],
+            "name": "MainCamera"
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "data": {
+                        "pos": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "rot": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scl": [
+                            1.0,
+                            2.5999999046325684,
+                            1.0
+                        ]
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "data": {
+                        "material": "Assets/Materials/M_01.json",
                         "mesh": "Builtin/Triangle"
                     },
                     "type": "MeshRenderer"
                 }
             ],
             "name": "JSONファイルで読みこんだシーンのオブジェクトだ"
+        },
+        {
+            "active": true,
+            "components": [
+                {
+                    "data": {
+                        "pos": [
+                            -3.200000047683716,
+                            0.4000000059604645,
+                            0.0
+                        ],
+                        "rot": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "scl": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    "type": "Transform"
+                },
+                {
+                    "data": {
+                        "material": "Assets/Materials/M_02.json",
+                        "mesh": "Builtin/Triangle"
+                    },
+                    "type": "MeshRenderer"
+                }
+            ],
+            "name": "追加オブジェクト"
         }
     ],
     "sceneName": "TestScene",

@@ -22,6 +22,7 @@
 #include "Transform.h"			// トランスフォームコンポーネントクラス
 #include "MeshRenderer.h"		// メッシュレンダラーコンポーネントクラス
 #include "Material.h"			// マテリアルクラス
+#include "Camera.h"				// カメラクラス
 
 
 /// <summary>
@@ -189,6 +190,34 @@ static void DrawMeshRenderer(const std::shared_ptr<MeshRenderer>& mr)
     ImGui::Text("Save Result: %s", s_saveOk ? "OK" : "FAILED");
 }
 
+/// <summary>
+/// カメラコンポーネントの描画
+/// </summary>
+/// <param name="cam">カメラコンポーネントの共有ポインタ</param>
+static void DrawCamera(const std::shared_ptr<Camera>& cam)
+{
+    if (!cam) return;
+
+    ImGui::Separator();
+    ImGui::Text("Camera");
+
+	// メインカメラかどうか
+    bool isMain = cam->IsMain();
+    if (ImGui::Checkbox("Main", &isMain))
+        cam->SetMain(isMain);
+
+	// 視野角
+    float fov = cam->GetFovDegrees();
+    if (ImGui::SliderFloat("FOV(deg)", &fov, 10.0f, 120.0f))
+        cam->SetFovDegrees(fov);
+
+	float nz = cam->GetNearZ(); // ニアクリップ面
+	float fz = cam->GetFarZ();  // ファークリップ面
+    if (ImGui::InputFloat("Near", &nz)) cam->SetNearZ(nz);
+    if (ImGui::InputFloat("Far", &fz))  cam->SetFarZ(fz);
+}
+
+
 // ---------- 登録テーブル（type名 → 描画） ----------
 
 namespace
@@ -208,6 +237,11 @@ namespace
                     DrawMeshRenderer(std::dynamic_pointer_cast<MeshRenderer>(c));
                 }
             },
+            { "Camera", [](const std::shared_ptr<Entity>&, const std::shared_ptr<Component>& c)
+                {
+                    DrawCamera(std::dynamic_pointer_cast<Camera>(c));
+                }
+},
         };
         return table;
     }
