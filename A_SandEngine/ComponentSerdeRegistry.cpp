@@ -19,6 +19,7 @@
 #include "Material.h"		// マテリアルクラス
 #include "GameEngine.h"		// ゲームエンジンクラス
 #include "Renderer.h"		// レンダラクラス
+#include "Camera.h"		    // カメラクラス
 
 //=======================================================
 // 型エイリアス
@@ -146,6 +147,31 @@ namespace
 		outData["mesh"] = mr->GetMeshId();              // メッシュID
         outData["material"] = mr->GetMaterialPath();    // マテリアルパス
     }
+
+    // --- Camera ---
+    
+	// Cameraを保存する（Component -> JSON）
+    void SaveCamera(const std::shared_ptr<Component>& c, json& outData)
+    {
+        auto cam = std::dynamic_pointer_cast<Camera>(c);
+        if (!cam) return;
+
+        outData["main"] = cam->IsMain();
+        outData["fov"] = cam->GetFovDegrees();
+        outData["near"] = cam->GetNearZ();
+        outData["far"] = cam->GetFarZ();
+    }
+
+	// Cameraを復元する（JSON -> Entityに追加）
+    void LoadCamera(Entity& e, const json& inData)
+    {
+        auto cam = e.AddComponentNoAwake<Camera>();
+        cam->SetMain(inData.value("main", true));
+        cam->SetFovDegrees(inData.value("fov", 60.0f));
+        cam->SetNearZ(inData.value("near", 0.1f));
+        cam->SetFarZ(inData.value("far", 100.0f));
+    }
+
 }
 
 //=======================================================
@@ -161,6 +187,7 @@ namespace ComponentSerdeRegistry
         {
             { "Transform",    ComponentSerde{ SaveTransform,    LoadTransform } },
             { "MeshRenderer", ComponentSerde{ SaveMeshRenderer, LoadMeshRenderer } },
+            { "Camera", ComponentSerde{ SaveCamera, LoadCamera } },
         };
         return table;
     }

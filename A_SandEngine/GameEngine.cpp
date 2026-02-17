@@ -2,7 +2,7 @@
 // ファイル名	: GameEngine.cpp
 // 制作者		: 大槻 海斗(Sand)
 // 制作日		: 2025/11/17
-// 更新日		: 2025/11/18
+// 更新日		: 2026/01/29
 // 詳細			: ゲームエンジンクラスの実装ファイル
 //=======================================================
 
@@ -22,6 +22,8 @@
 
 #include "Input.h"			// 入力管理クラス
 #include "SceneSerializer.h"// シーンシリアライザクラス
+
+#include "Camera.h"			// カメラクラス
 
 
 /// <summary>
@@ -180,16 +182,36 @@ void GameEngine::Draw()
 	// 描画開始
 	m_renderer->Begin();
 
+	if (m_currentScene)
+	{
+		// --- カメラの適用 ---
+
+// シーン内のエンティティを走査してカメラコンポーネントを探す
+		auto cam = Camera::FindMainCamera(m_currentScene);
+
+		// メインカメラが存在する場合、そのビュー・プロジェクション行列を設定
+		if (cam)
+		{
+			const float aspect = m_renderer->GetAspect();
+
+			m_renderer->SetViewMatrix(cam->GetViewMatrix());
+			m_renderer->SetProjectionMatrix(cam->GetProjectionMatrix(aspect));
+		}
+		else	// カメラが存在しない場合
+		{
+			// 3D描画用ワールド・ビュー・プロジェクション行列設定
+			m_renderer->SetWorldViewProjection3D();
+		}
+
+		// シーンの描画
+		m_currentScene->Draw();
+
+	}
+	
+
 	//エディタの描画
 	if (m_editor)
 		m_editor->Draw(m_currentScene);
-	
-
-	// 3D描画用ワールド・ビュー・プロジェクション行列設定
-	m_renderer->SetWorldViewProjection3D();
-
-	if (m_currentScene)
-		m_currentScene->Draw();
 
 	// 描画終了
 	m_renderer->End();

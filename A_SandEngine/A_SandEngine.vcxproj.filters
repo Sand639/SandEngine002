@@ -103,6 +103,12 @@
     <Filter Include="Serialization\ソースファイル">
       <UniqueIdentifier>{110863b3-b463-4d64-993f-05341b85c312}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Camera">
+      <UniqueIdentifier>{3c2049ea-6e26-4a86-944a-2872d308aa0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Camera\ヘッダーファイル">
+      <UniqueIdentifier>{953861d1-6ab1-40ea-b921-905df837722e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scene.cpp">
@@ -146,9 +152,6 @@
     </ClCompile>
     <ClCompile Include="DebugConsole.cpp">
       <Filter>Engine\Debug\ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Graphics\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="ConfigLoader.cpp">
       <Filter>Engine\ソースファイル</Filter>
@@ -194,6 +197,12 @@
     </ClCompile>
     <ClCompile Include="SceneSerializer.cpp">
       <Filter>Serialization\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Core\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Graphics\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="SceneSerializer.h">
       <Filter>Serialization\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Core\ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

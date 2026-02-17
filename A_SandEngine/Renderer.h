@@ -44,6 +44,9 @@ enum BLENDSTATE
 class Renderer
 {
 private:
+	int m_width = 0;		// 画面の幅
+	int m_height = 0;	// 画面の高さ
+
 	Microsoft::WRL::ComPtr<ID3D11Device> m_device;						// GPUを抽象化したデバイス
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_deviceContext;		// 描画コマンドを実行するコンテキスト
     Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;					// ウィンドウに描画するためのバッファ管理
@@ -105,5 +108,9 @@ public:
 	// デバイスコンテキスト取得
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext() { return m_deviceContext; }
 
+	// 画面サイズ取得
+	int GetWidth() const { return m_width; }
+	int GetHeight() const { return m_height; }
+	float GetAspect() const { return (m_height > 0) ? (float)m_width / (float)m_height : 1.0f; }
 
 };

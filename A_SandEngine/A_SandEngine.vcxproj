@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ComponentSerdeRegistry.cpp" />
     <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentSerdeRegistry.h" />
     <ClInclude Include="Config.h" />
